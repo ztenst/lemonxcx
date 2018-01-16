@@ -4,16 +4,18 @@
  * @author steven.allen <[<email address>]>
  * @date(2017.2.12)
  */
-class SaveExt extends Save{
+class PraiseExt extends Praise{
+    public static $status = [
+        '未处理','已处理'
+    ];
 	/**
      * 定义关系
      */
     public function relations()
     {
-        return array(
+         return array(
             'user'=>array(self::BELONGS_TO, 'UserExt', 'uid'),
-            'product'=>array(self::BELONGS_TO, 'ProductExt', 'hid'),
-            // 'images'=>array(self::HAS_MANY, 'AlbumExt', 'pid'),
+            'article'=>array(self::BELONGS_TO, 'PlotExt', 'cid'),
         );
     }
 
@@ -44,10 +46,18 @@ class SaveExt extends Save{
     }
 
     public function beforeValidate() {
-        if($this->getIsNewRecord())
+        if($this->getIsNewRecord()) {
+
+            $res = Yii::app()->controller->sendNotice(($this->plot?$this->plot->title:'').'有新举报，举报原因为：'.$this->reason.'，请登陆后台审核','',1);
+            
             $this->created = $this->updated = time();
-        else
+        }
+        else {
+            // if($this->status==1&&Yii::app()->db->createCommand("select status from report where id=".$this->id)->queryScalar()==0) {
+                
+            // }
             $this->updated = time();
+        }
         return parent::beforeValidate();
     }
 
@@ -85,15 +95,6 @@ class SaveExt extends Save{
             ),
             'BaseBehavior'=>'application.behaviors.BaseBehavior',
         );
-    }
-
-    public function getObjTitle()
-    {
-        if($this->type==1) {
-            return $model = ProductExt::model()->findByPk($this->pid)->name;
-        } elseif($this->type==2) {
-            return $model = ArticleExt::model()->findByPk($this->pid)->title;
-        }
     }
 
 }

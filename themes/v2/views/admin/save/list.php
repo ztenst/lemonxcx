@@ -20,9 +20,18 @@ $this->breadcrumbs = array($this->pageTitle);
         </form>
     </div>
     <div class="pull-right">
-        <a href="<?php echo $this->createAbsoluteUrl('edit') ?>" class="btn blue">
-            添加<?=$this->controllerName?> <i class="fa fa-plus"></i>
-        </a>
+        <div class="btn-group">
+            <button id="btnGroupVerticalDrop1" type="button" class="btn blue dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+            添加收藏 <i class="fa fa-plus"></i>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+            <?php foreach(['1'=>'产品','2'=>'帖子'] as $key=>$v1){?>
+                <li>
+                    <?=CHtml::link($v1,$this->createUrl('edit',['type'=>$key]))?>
+                </li>
+              <?php  }?>
+            </ul>
+        </div>
     </div>
 </div>
    <table class="table table-bordered table-striped table-condensed flip-content table-hover">
@@ -30,7 +39,8 @@ $this->breadcrumbs = array($this->pageTitle);
     <tr>
         <th class="text-center">排序</th>
         <th class="text-center">ID</th>
-        <th class="text-center">产品信息</th>
+        <th class="text-center">收藏类型</th>
+        <th class="text-center">收藏对象名</th>
         <th class="text-center">收藏者信息</th>
         <th class="text-center">添加时间</th>
         <!-- <th class="text-center">修改时间</th> -->
@@ -44,7 +54,8 @@ $this->breadcrumbs = array($this->pageTitle);
             <td style="text-align:center;vertical-align: middle" class="warning sort_edit"
                 data-id="<?php echo $v['id'] ?>"><?php echo $v['sort'] ?></td>
             <td style="text-align:center;vertical-align: middle"><?php echo $v->id; ?></td>
-            <td class="text-center"><?=$v->product->name?></td>
+            <td class="text-center"><?=$v->type==1?'产品':'帖子'?></td>
+            <td class="text-center"><?=$v->getObjTitle()?></td>
             <td class="text-center"><?=$v->user?($v->user->name.'/'.$v->user->phone):''?></td> 
             <td class="text-center"><?=date('Y-m-d H:i:s',$v->created)?></td>
             <!-- <td class="text-center"><?=date('Y-m-d',$v->updated)?></td> -->

@@ -57,7 +57,7 @@ class SaveController extends AdminController{
 		$this->render('list',['cate'=>$cate,'infos'=>$infos->data,'cates'=>$this->cates,'pager'=>$infos->pagination,'type' => $type,'value' => $value,'time' => $time,'time_type' => $time_type,]);
 	}
 
-	public function actionEdit($id='')
+	public function actionEdit($id='',$type='')
 	{
 		$modelName = $this->modelName;
 		$info = $id ? $modelName::model()->findByPk($id) : new $modelName;
@@ -70,7 +70,7 @@ class SaveController extends AdminController{
 				$this->setMessage(array_values($info->errors)[0][0],'error');
 			}
 		} 
-		$this->render('edit',['cates'=>$this->cates,'article'=>$info,'cates1'=>$this->cates1,]);
+		$this->render('edit',['type'=>$type,'article'=>$info]);
 	}
 
 	public function actionAjaxStatus($kw='',$ids='')

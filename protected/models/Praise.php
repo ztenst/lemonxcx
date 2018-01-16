@@ -1,26 +1,23 @@
 <?php
 
 /**
- * This is the model class for table "save".
+ * This is the model class for table "praise".
  *
- * The followings are the available columns in table 'save':
+ * The followings are the available columns in table 'praise':
  * @property integer $id
- * @property integer $pid
- * @property integer $type
+ * @property integer $cid
  * @property integer $uid
- * @property integer $status
- * @property integer $sort
  * @property integer $created
  * @property integer $updated
  */
-class Save extends CActiveRecord
+class Praise extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'save';
+		return 'praise';
 	}
 
 	/**
@@ -32,10 +29,10 @@ class Save extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('created', 'required'),
-			array('pid, type, uid, status, sort, created, updated', 'numerical', 'integerOnly'=>true),
+			array('cid, uid, created, updated', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, pid, type, uid, status, sort, created, updated', 'safe', 'on'=>'search'),
+			array('id, cid, uid, created, updated', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -57,11 +54,8 @@ class Save extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'pid' => 'Pid',
-			'type' => 'Type',
+			'cid' => 'Cid',
 			'uid' => 'Uid',
-			'status' => 'Status',
-			'sort' => 'Sort',
 			'created' => 'Created',
 			'updated' => 'Updated',
 		);
@@ -86,11 +80,8 @@ class Save extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('pid',$this->pid);
-		$criteria->compare('type',$this->type);
+		$criteria->compare('cid',$this->cid);
 		$criteria->compare('uid',$this->uid);
-		$criteria->compare('status',$this->status);
-		$criteria->compare('sort',$this->sort);
 		$criteria->compare('created',$this->created);
 		$criteria->compare('updated',$this->updated);
 
@@ -103,7 +94,7 @@ class Save extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Save the static model class
+	 * @return Praise the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
