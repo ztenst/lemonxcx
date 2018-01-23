@@ -1,6 +1,6 @@
 <?php
-$this->pageTitle = '资讯新建/编辑';
-$this->breadcrumbs = array('资讯管理', $this->pageTitle);
+$this->pageTitle = $house->title.'相册新建/编辑';
+$this->breadcrumbs = array('帖子管理', $this->pageTitle);
 ?>
 <?php $this->widget('ext.ueditor.UeditorWidget',array('id'=>'ArticleExt_content','options'=>"toolbars:[['fullscreen','source','undo','redo','|','customstyle','paragraph','fontfamily','fontsize'],
         ['bold','italic','underline','fontborder','strikethrough','superscript','subscript','removeformat',
@@ -15,76 +15,17 @@ $this->breadcrumbs = array('资讯管理', $this->pageTitle);
         'print','preview','searchreplace']]")); ?>
 <?php $form = $this->beginWidget('HouseForm', array('htmlOptions' => array('class' => 'form-horizontal'))) ?>
 <div class="form-group">
-    <label class="col-md-2 control-label">标题<span class="required" aria-required="true">*</span></label>
-    <div class="col-md-4">
-        <?php echo $form->textField($article, 'title', array('class' => 'form-control')); ?>
-    </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'title') ?></div>
-</div>
-<div class="form-group">
-    <label class="col-md-2 control-label">副标题/职位<span class="required" aria-required="true">*</span></label>
-    <div class="col-md-4">
-        <?php echo $form->textField($article, 'sub_title', array('class' => 'form-control')); ?>
-    </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'sub_title') ?></div>
-</div>
-<div class="form-group">
-    <label class="col-md-2 control-label">板块</label>
-    <div class="col-md-4">
-        <?php echo $form->dropDownList($article, 'type', Yii::app()->params['newstype'], array('class' => 'form-control', 'encode' => false)); ?>
-    </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'type') ?></div>
-</div>
-<div class="form-group">
-    <label class="col-md-2 control-label">栏目</label>
-    <div class="col-md-4">
-        <?php echo $form->dropDownList($article, 'cid', $cates, array('class' => 'form-control', 'encode' => false)); ?>
-    </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'cid') ?></div>
-</div>
-<div class="form-group">
-    <label class="col-md-2 control-label">作者<span class="required" aria-required="true">*</span></label>
-    <div class="col-md-4">
-        <?php echo $form->dropDownList($article, 'uid', CHtml::listData(UserExt::model()->findAll(),'id','name'),array('class' => 'form-control')); ?>
-    </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'uid') ?></div>
-</div>
-<div class="form-group">
-    <label class="col-md-2 control-label">文章摘要</label>
-    <div class="col-md-8">
-        <?php echo $form->textArea($article, 'desc', array('class' => 'form-control')); ?>
-    </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'desc') ?></div>
-</div>
-
-<div class="form-group">
-    <label class="col-md-2 control-label">文章内容</label>
-    <div class="col-md-8">
-        <?php echo $form->textArea($article, 'content', array('id'=>'ArticleExt_content')); ?>
-    </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'content')  ?></div>
-</div>
-<div class="form-group">
-    <label class="col-md-2 control-label text-nowrap">封面图</label>
-    <div class="col-md-8">
-        <?php $this->widget('FileUpload',array('model'=>$article,'attribute'=>'image','inputName'=>'img','width'=>400,'height'=>300)); ?>
-        <span class="help-block">建议尺寸：430*230</span> 
-    </div>
-</div>
-<div class="form-group">
-    <label class="col-md-2 control-label">文章来源</label>
-    <div class="col-md-4">
-        <?php echo $form->textField($article, 'source', array('class' => 'form-control')); ?>
-    </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'source') ?></div>
-</div>
-<div class="form-group">
-    <label class="col-md-2 control-label">状态</label>
-    <div class="col-md-4">
-        <?php echo $form->radioButtonList($article, 'status', ArticleExt::$status, array('separator' => '')); ?>
-    </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'status') ?></div>
-</div>
+<div class="col-md-2  control-label">选择图片</div>
+<div class="col-md-4">
+<?php $this->widget('FileUpload',array('inputName'=>'img','multi'=>true,'callback'=>'function(data){callback(data);}')); ?>
+                    <div class="form-group images-place" style="margin-left: 0">
+                  <?php if($infos) foreach ($infos as $key => $v) { ?>
+                      <div class='image-div' style='width: 150px;display:inline-table;height:180px'><a onclick='del_img(this)' class='btn red btn-xs' style='position: absolute;'><i class='fa fa-trash'></i></a><img src='<?=ImageTools::fixImage($v->url)?>' style='width: 150px;height: 120px'><select style='width: 120px' name="TkExt[type][]"><?php foreach (Yii::app()->params['imageTag'] as $m => $n) {?>
+                        <option value="<?=$m?>" <?=$m==0?'selected':''?>><?=$n?></option>
+                      <?php } ?></select><input type='hidden' class='trans_img' name='TkExt[album][]' value='<?=$v->url?>'></input><input type="text" style="width: 30px;height:24px" value="<?=$v->sort?>" name="TkExt[sort][]"></div>
+                  <?php }?>
+                </div>
+                </div></div>
 <div class="form-actions">
     <div class="row">
         <div class="col-md-offset-3 col-md-9">
@@ -193,3 +134,30 @@ Yii::app()->clientScript->registerScriptFile('/static/global/plugins/bootstrap-d
 Yii::app()->clientScript->registerScriptFile('/static/global/plugins/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js', CClientScript::POS_END, array('charset'=> 'utf-8'));
 Yii::app()->clientScript->registerScriptFile('/static/global/plugins/bootbox/bootbox.min.js', CClientScript::POS_END);
 ?>
+<script type="text/javascript">
+    <?php Tools::startJs()?>
+    function callback(data){
+      var op = '';
+      <?php foreach (Yii::app()->params['imageTag'] as $key => $value) {?>
+        op += '<option value="<?=$key?>"><?=$value?></option>';
+      <?php } ?>
+        if($('.image-div').length >= 30) {
+            alert('最多选择30张图片');
+        } else {
+            // 指定区域出现图片
+            var html = "";
+            image_html = "<div class='image-div' style='width: 150px;display:inline-table;height:180px'><a onclick='del_img(this)' class='btn red btn-xs' style='position: absolute;margin-left: 94px;'><i class='fa fa-trash'></i></a><img src='"+data.msg.url+"' style='width: 150px;height: 120px'><select style='width:120px' name='TkExt[type][]'>'"+op+"'</select><input type='hidden' class='trans_img' name='TkExt[album][]' value='"+data.msg.pic+"'></input><input type='text' style='width: 30px;height:24px' value='0' name='TkExt[sort][]'></div>";
+            $('.images-place').append(image_html);
+        }
+    }
+    //删除图片
+    function del_img(obj)
+    {
+        //将已选择的图片重设为可以选择
+        img = $(obj).parent().find('img').attr('src');
+        $('.xqtp').find('img[src="'+img+'"]').parent().find('.ch_img').html('<a onclick="ch_img(this)" >点击选择</a>');
+        $(obj).parent().remove();
+
+    }
+    <?php Tools::endJs('js')?>
+</script>

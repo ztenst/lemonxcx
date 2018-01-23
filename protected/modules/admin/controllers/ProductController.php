@@ -85,6 +85,7 @@ class ProductController extends AdminController{
 					$model =  new AlbumExt;
 					$model->pid = $house->id;
 					$model->url = $value;
+					$model->type = 1;
 					$model->sort = $sort[$key];
 					// $model->type = $type[$key];
 					$model->save();

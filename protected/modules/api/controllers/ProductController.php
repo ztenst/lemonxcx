@@ -4,7 +4,14 @@ class ProductController extends ApiController
 	public function actionList()
 	{
 		$data = $data['list'] = [];
+		$area = (int)Yii::app()->request->getQuery('area',0);
+		$street = (int)Yii::app()->request->getQuery('street',0);
+		$type = Yii::app()->request->getQuery('py','');
 		$cid = (int)Yii::app()->request->getQuery('cid',0);
+		$fid = (int)Yii::app()->request->getQuery('fid',0);
+		$mid = (int)Yii::app()->request->getQuery('mid',0);
+		$ccmid = (int)Yii::app()->request->getQuery('ccmid',0);
+		$cadrid = (int)Yii::app()->request->getQuery('cadrid',0);
 		$uid = (int)Yii::app()->request->getQuery('uid',0);
 		$save = (int)Yii::app()->request->getQuery('save',0);
 		$order = (int)Yii::app()->request->getQuery('order',0);
@@ -18,9 +25,16 @@ class ProductController extends ApiController
 		if($kw) {
 			$criteria->addSearchCondition('name',$kw);
 		}
-		if($cid) {
-			$criteria->addCondition("cid=:cid");
-			$criteria->params[':cid'] = $cid;
+		// if($cid) {
+		// 	$criteria->addCondition("cid=:cid");
+		// 	$criteria->params[':cid'] = $cid;
+		// }
+		foreach (['street','type','cid','fid','mid','ccmid','cadrid','area'] as $key => $value) {
+			if($$value) {
+				// var_dump($value,$$value);exit;
+				$criteria->addCondition("$value=:$value");
+				$criteria->params[":$value"] = $$value;
+			}
 		}
 		if($save&&$uid) {
 			$ids = [];

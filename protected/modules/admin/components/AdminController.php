@@ -66,9 +66,9 @@ class AdminController extends Controller
         return [
             ['label'=>'管理中心','icon'=>'icon-settings','url'=>'/admin/common/index','active'=>$this->route=='admin/common/index'],
             ['label' => '产品列表', 'icon' => 'icon-speedometer','url' => ['/admin/product/list'],'active'=>$this->route=='admin/product/edit'],
-            ['label' => '资讯管理', 'icon' => 'icon-speedometer', 'items' => [
-                ['label' => '资讯列表', 'url' => ['/admin/news/list']],
-                ['label' => '新建资讯', 'url' => ['/admin/news/edit'],'active'=>$this->route=='admin/news/edit'],
+            ['label' => '帖子管理', 'icon' => 'icon-speedometer', 'items' => [
+                ['label' => '帖子列表', 'url' => ['/admin/news/list']],
+                ['label' => '新建帖子', 'url' => ['/admin/news/edit'],'active'=>$this->route=='admin/news/edit'],
             ]],
             ['label'=>'推荐管理','icon'=>'icon-speedometer','url'=>['/admin/recom/list'],'active'=>$this->route=='admin/recom/edit'],
             ['label'=>'订单管理','icon'=>'icon-speedometer','url'=>['/admin/order/list'],'active'=>$this->route=='admin/order/edit'],

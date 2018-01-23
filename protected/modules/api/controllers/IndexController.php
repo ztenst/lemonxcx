@@ -24,7 +24,7 @@ class IndexController extends ApiController
             }
         }
         // 分类图
-        $tags = TagExt::model()->normal()->findAll(['condition'=>"cate='pcate'",'limit'=>5]);
+        $tags = TagExt::model()->normal()->findAll(['condition'=>"cate='tab'",'limit'=>10]);
         if($tags) {
             foreach ($tags as $key => $value) {
                 $data['cates'][] = [

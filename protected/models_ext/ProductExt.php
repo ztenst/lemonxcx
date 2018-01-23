@@ -30,16 +30,16 @@ class ProductExt extends Product{
     );
 
     public static $types = [
-        'yj'=>['name'=>'药剂','tags'=>['cid'=>'yjzl','mid'=>'yjcl','fid'=>'yjgn'],'isarea'=>1],
-        'pq'=>['name'=>'喷枪','tags'=>['cid'=>'pqkj'],'isarea'=>1],
-        'hxt'=>['name'=>'活性炭','tags'=>['cid'=>'hxtyl','fid'=>'hxtgn'],'isarea'=>0],
-        'jhq'=>['name'=>'净化器','tags'=>['cid'=>'jhqjyzb','fid'=>'jhqgn','cadrid'=>'jhqcadr','ccmid'=>'jhqccm'],'isarea'=>1],
-        'jsq'=>['name'=>'净水器','tags'=>['cid'=>'jsqglcj','mid'=>'jsqglcz'],'isarea'=>1],
-        'jcsb'=>['name'=>'检测设备','tags'=>['cid'=>'jcsblx','fid'=>'jcsbpp'],'isarea'=>0],
-        'hc'=>['name'=>'耗材','tags'=>['cid'=>'hczl','fid'=>'hcpp','mid'=>'hccz'],'isarea'=>0],
-        'jm'=>['name'=>'加盟','tags'=>['cid'=>'jmzl'],'isarea'=>1],
-        'cma'=>['name'=>'CMA合作','tags'=>['cid'=>'cmazl'],'isarea'=>1],
-        'soft'=>['name'=>'软件服务','tags'=>['cid'=>'gwzz'],'isarea'=>0]
+        'yj'=>['name'=>'药剂','tags'=>['cid'=>'yjzl','mid'=>'yjcl','fid'=>'yjgn'],'isarea'=>1,'isprice'=>1,'filters'=>['origin'=>['area','yjzl','yjprice'],'more'=>['yjgn','yjcl','sort']]],
+        'pq'=>['name'=>'喷枪','tags'=>['cid'=>'pqkj'],'isarea'=>1,'isprice'=>1,'filters'=>['origin'=>['area','pqkj','pqprice'],'more'=>['sort']]],
+        'hxt'=>['name'=>'活性炭','tags'=>['cid'=>'hxtyl','fid'=>'hxtgn'],'isarea'=>0,'isprice'=>1,'filters'=>['origin'=>['hxtyl','hxtgn','hxtprice'],'more'=>['sort']]],
+        'jhq'=>['name'=>'净化器','tags'=>['cid'=>'jhqjyzb','fid'=>'jhqgn','cadrid'=>'jhqcadr','ccmid'=>'jhqccm'],'isarea'=>1,'isprice'=>1,'filters'=>['origin'=>['area','jhqcadr','jhqprice'],'more'=>['jhqgn','jhqjyzb','jhqccm','sort']]],
+        'jsq'=>['name'=>'净水器','tags'=>['cid'=>'jsqglcj','mid'=>'jsqglcz'],'isarea'=>1,'isprice'=>1,'filters'=>['origin'=>['area','jsqglcz','jsqprice'],'more'=>['jsqglcj','sort']]],
+        'jcsb'=>['name'=>'检测设备','tags'=>['cid'=>'jcsblx','fid'=>'jcsbpp'],'isarea'=>0,'isprice'=>1,'filters'=>['origin'=>['jcsbpp','jcsblx','jcsbprice'],'more'=>['sort']]],
+        'hc'=>['name'=>'耗材','tags'=>['cid'=>'hczl','fid'=>'hcpp','mid'=>'hccz'],'isarea'=>0,'isprice'=>1,'filters'=>['origin'=>['hczl','hcpp','hcprice'],'more'=>['hccz','sort']]],
+        'jm'=>['name'=>'加盟','tags'=>['cid'=>'jmzl','fid'=>'jmpp'],'isarea'=>1,'isprice'=>0,'filters'=>['origin'=>['area','jmzl','jmpp'],'more'=>['sort']]],
+        'cma'=>['name'=>'CMA合作','tags'=>['cid'=>'cmazl','fid'=>'cmajb'],'isarea'=>1,'isprice'=>0,'filters'=>['origin'=>['area','cmazl','cmajb'],'more'=>['sort']]],
+        'soft'=>['name'=>'软件服务','tags'=>['cid'=>'gwzz'],'isarea'=>0,'isprice'=>1,'filters'=>['origin'=>[],'more'=>[]]]
     ];
 
     public static $tags = [

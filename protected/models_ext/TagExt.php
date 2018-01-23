@@ -35,13 +35,22 @@ class TagExt extends Tag
             'hczl'=>'耗材种类',
             'hccz'=>'耗材材质',
             'jmzl'=>'加盟种类',
+            'jmpp'=>'加盟品牌',
             'cmazl'=>'CMA合作种类',
+            'cmajb'=>'CMA合作级别',
             'gwzz'=>'软件服务类型'
 
         ],
         //区间式标签，区间式标签可以增删
         'range' => [
-            'price' => '均价筛选',
+            'yjprice' => '药剂价格',
+            'pqprice' => '喷枪价格',
+            'hxtprice' => '活性炭价格',
+            'jhqprice' => '净化器价格',
+            'jsqprice' => '净水器价格',
+            'jcsbprice' => '检测设备价格',
+            'hcprice' => '耗材价格',
+
         ]
     ];
 

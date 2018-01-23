@@ -11,7 +11,7 @@ class CusController extends ApiController
 		$criteria = new CDbCriteria;
 		$criteria->order = 't.sort desc,t.updated desc';
 		$criteria->limit = $limit;
-		$criteria->addCondition('t.type=2');
+		// $criteria->addCondition('t.type=2');
 		if($kw) {
 			$criteria->addSearchCondition('title',$kw);
 		}

@@ -7,6 +7,7 @@
  * @property integer $id
  * @property string $title
  * @property string $sub_title
+ * @property integer $uid
  * @property string $author
  * @property string $source
  * @property integer $type
@@ -40,12 +41,12 @@ class Article extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('created', 'required'),
-			array('type, cid, sort, status, deleted, created, updated', 'numerical', 'integerOnly'=>true),
+			array('uid, type, cid, sort, status, deleted, created, updated', 'numerical', 'integerOnly'=>true),
 			array('title, sub_title, author, source, desc, image', 'length', 'max'=>255),
 			array('content, data_conf', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, title, sub_title, author, source, type, desc, image, content, cid, sort, status, data_conf, deleted, created, updated', 'safe', 'on'=>'search'),
+			array('id, title, sub_title, uid, author, source, type, desc, image, content, cid, sort, status, data_conf, deleted, created, updated', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -69,6 +70,7 @@ class Article extends CActiveRecord
 			'id' => 'ID',
 			'title' => 'Title',
 			'sub_title' => 'Sub Title',
+			'uid' => 'Uid',
 			'author' => 'Author',
 			'source' => 'Source',
 			'type' => 'Type',
@@ -106,6 +108,7 @@ class Article extends CActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('title',$this->title,true);
 		$criteria->compare('sub_title',$this->sub_title,true);
+		$criteria->compare('uid',$this->uid);
 		$criteria->compare('author',$this->author,true);
 		$criteria->compare('source',$this->source,true);
 		$criteria->compare('type',$this->type);

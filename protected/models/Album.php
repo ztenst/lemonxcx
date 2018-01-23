@@ -7,6 +7,7 @@
  * @property integer $id
  * @property integer $pid
  * @property integer $cover
+ * @property integer $type
  * @property integer $cid
  * @property string $url
  * @property string $name
@@ -33,11 +34,11 @@ class Album extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('created', 'required'),
-			array('pid, cover, cid, sort, created, updated', 'numerical', 'integerOnly'=>true),
+			array('pid, cover, type, cid, sort, created, updated', 'numerical', 'integerOnly'=>true),
 			array('url, name', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, pid, cover, cid, url, name, sort, created, updated', 'safe', 'on'=>'search'),
+			array('id, pid, cover, type, cid, url, name, sort, created, updated', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -61,6 +62,7 @@ class Album extends CActiveRecord
 			'id' => 'ID',
 			'pid' => 'Pid',
 			'cover' => 'Cover',
+			'type' => 'Type',
 			'cid' => 'Cid',
 			'url' => 'Url',
 			'name' => 'Name',
@@ -91,6 +93,7 @@ class Album extends CActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('pid',$this->pid);
 		$criteria->compare('cover',$this->cover);
+		$criteria->compare('type',$this->type);
 		$criteria->compare('cid',$this->cid);
 		$criteria->compare('url',$this->url,true);
 		$criteria->compare('name',$this->name,true);
