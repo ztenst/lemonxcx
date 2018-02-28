@@ -14,6 +14,7 @@ class ProductController extends ApiController
 		$cadrid = (int)Yii::app()->request->getQuery('cadrid',0);
 		$uid = (int)Yii::app()->request->getQuery('uid',0);
 		$save = (int)Yii::app()->request->getQuery('save',0);
+		$savetype = (int)Yii::app()->request->getQuery('savetype',0);
 		$order = (int)Yii::app()->request->getQuery('order',0);
 		$page = (int)Yii::app()->request->getQuery('page',1);
 		$limit = (int)Yii::app()->request->getQuery('limit',20);
@@ -36,9 +37,9 @@ class ProductController extends ApiController
 				$criteria->params[":$value"] = $$value;
 			}
 		}
-		if($save&&$uid) {
+		if($savetype&&$save&&$uid) {
 			$ids = [];
-			$saeids = Yii::app()->db->createCommand("select pid from save where uid=$uid")->queryAll();
+			$saeids = Yii::app()->db->createCommand("select pid from save where uid=$uid and type=$savetype")->queryAll();
 			if($saeids) {
 				foreach ($saeids as $key => $value) {
 					$ids[] = $value['pid'];
@@ -180,13 +181,14 @@ class ProductController extends ApiController
     {
         if($pid&&$openid) {
             $staff = UserExt::getUserByOpenId($openid);
-            if($save = SaveExt::model()->find('pid='.(int)$pid.' and uid='.$staff->id)) {
-                SaveExt::model()->deleteAllByAttributes(['pid'=>$pid,'uid'=>$staff->id]);
+            if($save = SaveExt::model()->find('pid='.(int)$pid.' and type=1 and uid='.$staff->id)) {
+                SaveExt::model()->deleteAllByAttributes(['pid'=>$pid,'uid'=>$staff->id,'type'=>1]);
                 $this->returnSuccess('取消收藏成功');
             } else {
                 $save = new SaveExt;
                 $save->uid = $staff->id;
                 $save->pid = $pid;
+                $save->type = 1;
                 $save->save();
                 $this->returnSuccess('收藏成功');
             }

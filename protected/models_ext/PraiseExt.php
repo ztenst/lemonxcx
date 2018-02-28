@@ -15,7 +15,7 @@ class PraiseExt extends Praise{
     {
          return array(
             'user'=>array(self::BELONGS_TO, 'UserExt', 'uid'),
-            'article'=>array(self::BELONGS_TO, 'PlotExt', 'cid'),
+            'article'=>array(self::BELONGS_TO, 'ArticleExt', 'cid'),
         );
     }
 
@@ -47,14 +47,9 @@ class PraiseExt extends Praise{
 
     public function beforeValidate() {
         if($this->getIsNewRecord()) {
-
-            $res = Yii::app()->controller->sendNotice(($this->plot?$this->plot->title:'').'有新举报，举报原因为：'.$this->reason.'，请登陆后台审核','',1);
-            
             $this->created = $this->updated = time();
         }
         else {
-            // if($this->status==1&&Yii::app()->db->createCommand("select status from report where id=".$this->id)->queryScalar()==0) {
-                
             // }
             $this->updated = time();
         }
