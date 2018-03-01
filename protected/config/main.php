@@ -106,11 +106,9 @@ $config1 = array(
             },
 		),
 		//uc体系使用的user组件
-		'ucUser' => array(
-			'class' => 'CWebUser',
-			'stateKeyPrefix' => '_hangjiauc',
-            'allowAutoLogin' => true,
-		),
+		'wxPay' => [
+            'class' => 'application.components.WxPay',
+        ],
         'redis' => [
             'class' => 'application.components.redis.HangjiaRedisConnection',
             'redisConfig' => function() {
