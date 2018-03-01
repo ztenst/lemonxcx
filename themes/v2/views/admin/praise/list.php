@@ -23,7 +23,6 @@ $this->breadcrumbs = array($this->pageTitle);
    <table class="table table-bordered table-striped table-condensed flip-content table-hover">
     <thead class="flip-content">
     <tr>
-        <th class="text-center">排序</th>
         <th class="text-center">ID</th>
         <th class="text-center">用户</th>
         <th class="text-center">帖子</th>
@@ -34,8 +33,6 @@ $this->breadcrumbs = array($this->pageTitle);
     <tbody>
     <?php foreach($infos as $k=>$v): ?>
         <tr>
-            <td style="text-align:center;vertical-align: middle" class="warning sort_edit"
-                data-id="<?php echo $v['id'] ?>"><?php echo $v['sort'] ?></td>
             <td style="text-align:center;vertical-align: middle"><?php echo $v->id; ?></td>
             <td class="text-center"><?=$v->user?$v->user->name:''?></td>
             <td class="text-center"><?=$v->article?$v->article->title:''?></td> 
