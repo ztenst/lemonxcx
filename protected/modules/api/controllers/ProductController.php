@@ -183,6 +183,7 @@ class ProductController extends ApiController
             $staff = UserExt::getUserByOpenId($openid);
             if($save = SaveExt::model()->find('pid='.(int)$pid.' and type=1 and uid='.$staff->id)) {
                 SaveExt::model()->deleteAllByAttributes(['pid'=>$pid,'uid'=>$staff->id,'type'=>1]);
+                $this->frame['data'] = 0;
                 $this->returnSuccess('取消收藏成功');
             } else {
                 $save = new SaveExt;
@@ -190,6 +191,7 @@ class ProductController extends ApiController
                 $save->pid = $pid;
                 $save->type = 1;
                 $save->save();
+                $this->frame['data'] = 1;
                 $this->returnSuccess('收藏成功');
             }
         }else {

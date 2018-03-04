@@ -62,6 +62,7 @@ class CusController extends ApiController
             $staff = UserExt::model()->findByPk($uid);
             if($save = SaveExt::model()->find('pid='.(int)$pid.' and type=2 and uid='.$staff->id)) {
                 SaveExt::model()->deleteAllByAttributes(['pid'=>$pid,'uid'=>$staff->id,'type'=>2]);
+                $this->frame['data'] = 0;
                 $this->returnSuccess('取消收藏成功');
             } else {
                 $save = new SaveExt;
@@ -69,6 +70,7 @@ class CusController extends ApiController
                 $save->pid = $pid;
                 $save->type = 2;
                 $save->save();
+                $this->frame['data'] = 1;
                 $this->returnSuccess('收藏成功');
             }
         }else {
@@ -83,12 +85,14 @@ class CusController extends ApiController
             if($save = PraiseExt::model()->find('cid='.(int)$cid.' and uid='.$staff->id)) {
                 PraiseExt::model()->deleteAllByAttributes(['cid'=>$cid,'uid'=>$staff->id]);
                 $this->returnSuccess('取消点赞成功');
+                $this->frame['data'] = 0;
             } else {
                 $save = new PraiseExt;
                 $save->uid = $staff->id;
                 $save->cid = $cid;
                 // $save->type = 2;
                 $save->save();
+                $this->frame['data'] = 1;
                 $this->returnSuccess('点赞成功');
             }
         }else {
