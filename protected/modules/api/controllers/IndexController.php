@@ -26,9 +26,16 @@ class IndexController extends ApiController
         // 分类图
         $tags = TagExt::model()->normal()->findAll(['condition'=>"cate='tab'",'limit'=>10]);
         if($tags) {
+            $aat = ProductExt::$types;
+            $aats = [];
+            foreach ($aat as $key => $value) {
+                $aats[$value['name']] = $key;
+            }
             foreach ($tags as $key => $value) {
+
                 $data['cates'][] = [
                     'id'=>$value->id,
+                    'py'=>$value->name=='论坛'?'luntan':$aats[$value->name],
                     'name'=>$value->name,
                     'img'=>ImageTools::fixImage($value->icon,200,200),
                 ];
@@ -74,13 +81,20 @@ class IndexController extends ApiController
             if($cont) {
                 $cont = json_decode($cont,true);
                 $openid = $cont['openid'];
-                $data = ['open_id'=>$cont['openid'],'session_key'=>$cont['session_key'],'uid'=>''];
+                // $data = ['open_id'=>$cont['openid'],'session_key'=>$cont['session_key'],'uid'=>''];
                 if($openid) {
-                    $user = UserExt::getUserByOpenId($openid);
+                    $user = UserExt::model()->find("openid='$openid'");
                     if($user) {
-                        $data['uid'] = $user->id;
+                        $data = [
+                            'id'=>$user->id,
+                            'phone'=>$user->phone,
+                            'name'=>$user->name,
+                            'openid'=>$openid,
+                        ];
+                        echo json_encode($data);
+                    } else {
+                        echo json_encode(['open_id'=>$cont['openid'],'session_key'=>$cont['session_key']]);
                     }
-                    echo json_encode($data);
                 }
                 Yii::app()->end();
             }
@@ -117,6 +131,56 @@ class IndexController extends ApiController
         $info = ArticleExt::model()->find(['condition'=>'type=3','order'=>'updated desc']);
         if($info) {
             $this->frame['data'] = $info->attributes;
+        }
+    }
+
+    public function actionXcxLogin()
+    {
+        if(Yii::app()->request->getIsPostRequest()) {
+            $phone = Yii::app()->request->getPost('phone','');
+            $openid = Yii::app()->request->getPost('openid','');
+            $name = Yii::app()->request->getPost('name','');
+            if(!$phone||!$openid) {
+                $this->returnError('参数错误');
+                return false;
+            }
+            if($phone) {
+                $user = UserExt::model()->find("phone='$phone'");
+            } elseif($openid) {
+                $user = UserExt::model()->find("openid='$openid'");
+            }
+        // $phone = '13861242596';
+            if($user) {
+                if($openid&&$user->openid!=$openid){
+                    $user->openid=$openid;
+                    $user->save();
+                }
+                
+            } else {
+                $user = new UserExt;
+                $user->phone = $phone;
+                $user->openid = $openid;
+                $user->name = $name?$name:$this->get_rand_str();
+                $user->status = 1;
+                $user->pwd = md5('123456');
+                $user->save();
+
+                // $this->returnError('用户尚未登录');
+            }
+            $model = new ApiLoginForm();
+            $model->isapp = true;
+            $model->username = $user->phone;
+            $model->password = $user->pwd;
+            // $model->obj = $user->attributes
+            $model->login();
+            $this->staff = $user;
+            $data = [
+                'id'=>$this->staff->id,
+                'phone'=>$this->staff->phone,
+                'name'=>$this->staff->name,
+                'openid'=>$this->staff->openid,
+            ];
+            $this->frame['data'] = $data;
         }
     }
 }
