@@ -201,7 +201,7 @@ class IndexController extends ApiController
             Yii::app()->end();
             // print($data . "\n");
         } else {
-            echo '';
+            echo $errCode;
             Yii::app()->end();
         }
     }
