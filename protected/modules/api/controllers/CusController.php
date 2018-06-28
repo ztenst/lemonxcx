@@ -29,7 +29,7 @@ class CusController extends ApiController
 					'name'=>Tools::u8_title_substr($value->title,20),
 					'cate'=>$value->cate?$value->cate->name:'',
 					'date'=>date('m-d',$value->updated),
-					'author'=>$value->user->name,
+					'author'=>$value->user?$value->user->name:'',
 					'save_num'=>Yii::app()->db->createCommand("select count(id) from save where type=2 and pid=".$value->id)->queryScalar(),
 					'praise_num'=>Yii::app()->db->createCommand("select count(id) from praise where cid=".$value->id)->queryScalar(),
 					// 'price'=>$value->price,
