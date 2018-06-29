@@ -7,6 +7,9 @@ class CusController extends ApiController
 		$cid = (int)Yii::app()->request->getQuery('cid',0);
 		$page = (int)Yii::app()->request->getQuery('page',1);
 		$limit = (int)Yii::app()->request->getQuery('limit',20);
+        $uid = (int)Yii::app()->request->getQuery('uid',0);
+        $save = (int)Yii::app()->request->getQuery('save',0);
+        $savetype = (int)Yii::app()->request->getQuery('savetype',0);
 		$kw = $this->cleanXss(Yii::app()->request->getQuery('kw',''));
 		$criteria = new CDbCriteria;
 		$criteria->order = 't.sort desc,t.updated desc';
@@ -19,6 +22,21 @@ class CusController extends ApiController
 			$criteria->addCondition("cid=:cid");
 			$criteria->params[':cid'] = $cid;
 		}
+        if($uid) {
+            $criteria->addCondition("uid=:uid");
+            $criteria->params[':uid'] = $uid;
+        }
+        
+        if($savetype&&$save&&$uid) {
+            $ids = [];
+            $saeids = Yii::app()->db->createCommand("select pid from save where uid=$uid and type=$savetype")->queryAll();
+            if($saeids) {
+                foreach ($saeids as $key => $value) {
+                    $ids[] = $value['pid'];
+                }
+            }
+            $criteria->addInCondition('id',$ids);
+        }
 		$ress = ArticleExt::model()->with('cate')->getList($criteria);
 		$infos = $ress->data;
 		$pager = $ress->pagination;
