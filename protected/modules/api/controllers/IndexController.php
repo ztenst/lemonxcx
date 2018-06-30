@@ -96,6 +96,7 @@ class IndexController extends ApiController
                         echo json_encode(['open_id'=>$cont['openid'],'session_key'=>$cont['session_key']]);
                     }
                 } else {
+                    Yii::log(json_encode($res));
                     echo json_encode(['open_id'=>'','msg'=>'参数错误']);
                 }
                 Yii::app()->end();
