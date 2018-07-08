@@ -97,7 +97,8 @@ class IndexController extends ApiController
                     }
                 } else {
                     Yii::log(json_encode($res));
-                    echo json_encode(['open_id'=>'','msg'=>'参数错误']);
+                    $this->returnError($cont['errmsg']);
+                    // echo json_encode(['open_id'=>'','msg'=>'参数错误']);
                 }
                 Yii::app()->end();
             }

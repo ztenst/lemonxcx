@@ -26,7 +26,7 @@ class CusController extends ApiController
             $criteria->addCondition("uid=:uid");
             $criteria->params[':uid'] = $uid;
         }
-        
+
         if($savetype&&$save&&$uid) {
             $ids = [];
             $saeids = Yii::app()->db->createCommand("select pid from save where uid=$uid and type=$savetype")->queryAll();
@@ -35,7 +35,7 @@ class CusController extends ApiController
                     $ids[] = $value['pid'];
                 }
             }
-            $criteria->addInCondition('id',$ids);
+            $criteria->addInCondition('t.id',$ids);
         }
 		$ress = ArticleExt::model()->with('cate')->getList($criteria);
 		$infos = $ress->data;
