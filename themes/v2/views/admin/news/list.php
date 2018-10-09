@@ -16,7 +16,7 @@ $this->breadcrumbs = array($this->pageTitle);
             </div>
             <?php Yii::app()->controller->widget("DaterangepickerWidget",['time'=>$time,'params'=>['class'=>'form-control chose_text']]);?>
             <div class="form-group">
-                <?php echo CHtml::dropDownList('type',$type,Yii::app()->params['newstype'],array('class'=>'form-control chose_select','encode'=>false,'prompt'=>'--选择板块--')); ?>
+                <?php echo CHtml::dropDownList('type',$type,Yii::app()->params['newstype'],array('class'=>'form-control chose_select','encode'=>false,'prompt'=>'--选择类型--')); ?>
             </div>
             <button type="submit" class="btn blue">搜索</button>
             <a class="btn yellow" onclick="removeOptions()"><i class="fa fa-trash"></i>&nbsp;清空</a>
@@ -35,7 +35,7 @@ $this->breadcrumbs = array($this->pageTitle);
         <th class="text-center">ID</th>
         <th class="text-center">标题</th>
         <th class="text-center">作者</th>
-        <th class="text-center">板块</th>
+        <th class="text-center">类型</th>
         <th class="text-center">添加时间</th>
         <th class="text-center">修改时间</th>
         <th class="text-center">状态</th>

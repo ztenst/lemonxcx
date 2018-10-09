@@ -13,7 +13,9 @@
  * @property integer $parent
  * @property integer $is_jl
  * @property integer $is_manage
+ * @property string $licence
  * @property string $id_pic
+ * @property string $id_pic_2
  * @property integer $qf_uid
  * @property integer $pid
  * @property string $city
@@ -25,6 +27,7 @@
  * @property string $ava
  * @property string $image
  * @property integer $sex
+ * @property string $note
  * @property integer $status
  * @property integer $deleted
  * @property integer $sort
@@ -51,12 +54,12 @@ class User extends CActiveRecord
 		return array(
 			array('name, created', 'required'),
 			array('parent, is_jl, is_manage, qf_uid, pid, vip_expire, type, sex, status, deleted, sort, created, updated', 'numerical', 'integerOnly'=>true),
-			array('pwd, true_name, id_pic, openid, company, ava, image', 'length', 'max'=>255),
+			array('pwd, true_name, licence, id_pic, id_pic_2, openid, company, ava, image, note', 'length', 'max'=>255),
 			array('wx, name, city, pro', 'length', 'max'=>100),
 			array('phone', 'length', 'max'=>15),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, pwd, wx, phone, true_name, name, parent, is_jl, is_manage, id_pic, qf_uid, pid, city, pro, openid, vip_expire, company, type, ava, image, sex, status, deleted, sort, created, updated', 'safe', 'on'=>'search'),
+			array('id, pwd, wx, phone, true_name, name, parent, is_jl, is_manage, licence, id_pic, id_pic_2, qf_uid, pid, city, pro, openid, vip_expire, company, type, ava, image, sex, note, status, deleted, sort, created, updated', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -86,7 +89,9 @@ class User extends CActiveRecord
 			'parent' => 'Parent',
 			'is_jl' => 'Is Jl',
 			'is_manage' => 'Is Manage',
+			'licence' => 'Licence',
 			'id_pic' => 'Id Pic',
+			'id_pic_2' => 'Id Pic 2',
 			'qf_uid' => 'Qf Uid',
 			'pid' => 'Pid',
 			'city' => 'City',
@@ -98,6 +103,7 @@ class User extends CActiveRecord
 			'ava' => 'Ava',
 			'image' => 'Image',
 			'sex' => 'Sex',
+			'note' => 'Note',
 			'status' => 'Status',
 			'deleted' => 'Deleted',
 			'sort' => 'Sort',
@@ -133,7 +139,9 @@ class User extends CActiveRecord
 		$criteria->compare('parent',$this->parent);
 		$criteria->compare('is_jl',$this->is_jl);
 		$criteria->compare('is_manage',$this->is_manage);
+		$criteria->compare('licence',$this->licence,true);
 		$criteria->compare('id_pic',$this->id_pic,true);
+		$criteria->compare('id_pic_2',$this->id_pic_2,true);
 		$criteria->compare('qf_uid',$this->qf_uid);
 		$criteria->compare('pid',$this->pid);
 		$criteria->compare('city',$this->city,true);
@@ -145,6 +153,7 @@ class User extends CActiveRecord
 		$criteria->compare('ava',$this->ava,true);
 		$criteria->compare('image',$this->image,true);
 		$criteria->compare('sex',$this->sex);
+		$criteria->compare('note',$this->note,true);
 		$criteria->compare('status',$this->status);
 		$criteria->compare('deleted',$this->deleted);
 		$criteria->compare('sort',$this->sort);

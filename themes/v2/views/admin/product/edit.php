@@ -62,7 +62,13 @@ $childArea = $parent ? AreaExt::model()->getByParent($parent)->normal()->findAll
     <?php } ?>
     <?php endif;?>
 
-
+<div class="form-group">
+    <label class="col-md-2 control-label">点击量<span class="required" aria-required="true">*</span></label>
+    <div class="col-md-4">
+        <?php echo $form->textField($article, 'hits', array('class' => 'form-control')); ?>
+    </div>
+    <div class="col-md-2"><?php echo $form->error($article, 'hits') ?></div>
+</div>
 <div class="form-group">
     <label class="col-md-2 control-label">现价</label>
     <div class="col-md-4">
@@ -85,11 +91,32 @@ $childArea = $parent ? AreaExt::model()->getByParent($parent)->normal()->findAll
     <div class="col-md-2"><?php echo $form->error($article, 'shortdes') ?></div>
 </div>
 <div class="form-group">
+    <label class="col-md-2 control-label">公司名<span class="required" aria-required="true">*</span></label>
+    <div class="col-md-4">
+        <?php echo $form->textField($article, 'company', array('class' => 'form-control')); ?>
+    </div>
+    <div class="col-md-2"><?php echo $form->error($article, 'company') ?></div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label">联系电话<span class="required" aria-required="true">*</span></label>
+    <div class="col-md-4">
+        <?php echo $form->textField($article, 'phone', array('class' => 'form-control')); ?>
+    </div>
+    <div class="col-md-2"><?php echo $form->error($article, 'phone') ?></div>
+</div>
+<div class="form-group">
     <label class="col-md-2 control-label">产品特点</label>
     <div class="col-md-8">
         <?php echo $form->textArea($article, 'content', array('id'=>'ArticleExt_content')); ?>
     </div>
     <div class="col-md-2"><?php echo $form->error($article, 'content')  ?></div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label">是否认证</label>
+    <div class="col-md-4">
+        <?php echo $form->radioButtonList($article, 'is_rz', ['否','是'], array('separator' => '')); ?>
+    </div>
+    <div class="col-md-2"><?php echo $form->error($article, 'is_rz') ?></div>
 </div>
 <div class="form-group">
     <label class="col-md-2 control-label text-nowrap">封面图</label>

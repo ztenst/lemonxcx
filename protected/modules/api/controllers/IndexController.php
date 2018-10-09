@@ -18,6 +18,7 @@ class IndexController extends ApiController
         $data = $data['imgs'] = $data['cates'] = $data['short_recoms'] = $data['long_recoms'] = [];
         // 轮播图
         $banner = SiteExt::getAttr('qjpz','indeximages');
+        $rzwords = SiteExt::getAttr('qjpz','rzwords');
         if($banner) {
             foreach ($banner as $key => $value) {
                 $data['imgs'][] = Yii::app()->file->is_heng?ImageTools::fixImage($value,750,376):ImageTools::fixImage($value,750,826);
@@ -58,6 +59,37 @@ class IndexController extends ApiController
             foreach ($shs as $key => $value) {
                 $data['long_recoms'][] = [
                     'pid'=>$value->getObj()->id,
+                    // 'name'=>$value->name,//750
+                    'img'=>ImageTools::fixImage($value->image,750,260),
+                ];
+            }
+        }
+        // 6个产品
+        $shs = RecomExt::model()->normal()->findAll(['condition'=>'cid=3','limit'=>6]);
+        if($shs) {
+            foreach ($shs as $key => $value) {
+                $obj = $value->getObj();
+                $data['products'][] = [
+                    'pid'=>$obj->id,
+                    'name'=>$obj->name,
+                    'price'=>$obj->price,
+                    'company'=>$obj->company,
+                    'rzwords'=>$obj->is_rz?$rzwords:'',
+                    // 'name'=>$value->name,//750
+                    'img'=>ImageTools::fixImage($value->image?$value->image:$obj->image,750,260),
+                ];
+            }
+        }
+        // 十篇推荐的文章
+        $shs = ArticleExt::model()->findAll(['condition'=>'type=1 and status=1','limit'=>10,'order'=>'sort desc,updated desc']);
+        if($shs) {
+            foreach ($shs as $key => $value) {
+                // $obj = $value->getObj();
+                $data['news'][] = [
+                    'id'=>$value->id,
+                    'title'=>$value->title,
+                    'author'=>$value->user?$value->user->name:'佚名',
+                    'hits'=>$value->hits,
                     // 'name'=>$value->name,//750
                     'img'=>ImageTools::fixImage($value->image,750,260),
                 ];
