@@ -4,7 +4,7 @@ class ConfigController extends ApiController{
 	{
 		$oths = CacheExt::gas('wap_all_config','AreaExt',0,'wap配置缓存',function (){
 	            $tmp = [
-					'tel'=>ImageTools::fixImage(SiteExt::getAttr('qjpz','tel')),
+					'tel'=>SiteExt::getAttr('qjpz','tel'),
 					'qq'=>SiteExt::getAttr('qjpz','qq'),
 					'addr'=>SiteExt::getAttr('qjpz','addr'),
 					'boss_name'=>SiteExt::getAttr('qjpz','boss_name'),

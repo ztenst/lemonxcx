@@ -74,7 +74,7 @@ class CusController extends ApiController
 		$this->frame['data'] = $data;
 	}
 
-	public function actionAddSave($pid='',$uid='')
+	public function actionAddSave($pid='',$uid='',$type=1)
     {
         if($pid&&$uid) {
             $staff = UserExt::model()->findByPk($uid);
@@ -86,7 +86,7 @@ class CusController extends ApiController
                 $save = new SaveExt;
                 $save->uid = $staff->id;
                 $save->pid = $pid;
-                $save->type = 2;
+                $save->type = $type;
                 $save->save();
                 $this->frame['data'] = 1;
                 $this->returnSuccess('收藏成功');
@@ -125,7 +125,7 @@ class CusController extends ApiController
     		$title = Yii::app()->request->getPost('title','');
     		$content = Yii::app()->request->getPost('content','');
     		$fm = Yii::app()->request->getPost('fm','');
-    		$imgs = Yii::app()->request->getPost('imgs',[]);
+    		$imgs = Yii::app()->request->getPost('imgs','');
     		if(!$uid || !$title || !$content) {
     			return $this->returnError('参数错误');
     		}
@@ -136,7 +136,7 @@ class CusController extends ApiController
     		$obj->content = $content;
     		$obj->image = $fm;
     		if($obj->save()) {
-    			if($imgs) {
+    			if($imgs = explode(',', $imgs)) {
     				foreach ($imgs as $key => $value) {
     					$im = new AlbumExt;
     					$im->url = $value;
