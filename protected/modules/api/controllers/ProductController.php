@@ -61,12 +61,15 @@ class ProductController extends ApiController
 		$infos = $ress->data;
 		$pager = $ress->pagination;
 		if($infos) {
+			$rzwords = SiteExt::getAttr('qjpz','rzwords');
 			foreach ($infos as $key => $value) {
 				$data['list'][] = [
 					'id'=>$value->id,
 					'name'=>Tools::u8_title_substr($value->name,20),
+					'rzwords'=>$value->is_rz?$rzwords:'',
+					'company'=>$value->company,
 					'price'=>$value->price,
-					'old_price'=>$value->old_price,
+					'hits'=>$value->hits,
 					'ts'=>$value->shortdes,
 					'image'=>ImageTools::fixImage($value->image,370,250),
 				];
@@ -80,7 +83,7 @@ class ProductController extends ApiController
 		$this->frame['data'] = $data;
 	}
 
-	public function actionInfo($id='',$openid='')
+	public function actionInfo($id='',$openid='',$uid='')
 	{
 		$info = ProductExt::model()->findByPk($id);
 		$data = $info->attributes;

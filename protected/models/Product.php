@@ -7,6 +7,10 @@
  * @property integer $id
  * @property string $name
  * @property double $price
+ * @property integer $is_rz
+ * @property integer $hits
+ * @property string $phone
+ * @property string $company
  * @property double $old_price
  * @property string $type
  * @property integer $ccmid
@@ -44,15 +48,16 @@ class Product extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('created', 'required'),
-			array('ccmid, cadrid, street, area, mid, fid, cid, sort, deleted, status, created, updated', 'numerical', 'integerOnly'=>true),
+			array('company, created', 'required'),
+			array('is_rz, hits, ccmid, cadrid, street, area, mid, fid, cid, sort, deleted, status, created, updated', 'numerical', 'integerOnly'=>true),
 			array('price, old_price', 'numerical'),
 			array('name, type, image', 'length', 'max'=>255),
-			array('shortdes', 'length', 'max'=>100),
+			array('phone', 'length', 'max'=>20),
+			array('company, shortdes', 'length', 'max'=>100),
 			array('content, data_conf', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, name, price, old_price, type, ccmid, cadrid, street, area, mid, fid, cid, image, shortdes, content, data_conf, sort, deleted, status, created, updated', 'safe', 'on'=>'search'),
+			array('id, name, price, is_rz, hits, phone, company, old_price, type, ccmid, cadrid, street, area, mid, fid, cid, image, shortdes, content, data_conf, sort, deleted, status, created, updated', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -76,6 +81,10 @@ class Product extends CActiveRecord
 			'id' => 'ID',
 			'name' => 'Name',
 			'price' => 'Price',
+			'is_rz' => 'Is Rz',
+			'hits' => 'Hits',
+			'phone' => 'Phone',
+			'company' => 'Company',
 			'old_price' => 'Old Price',
 			'type' => 'Type',
 			'ccmid' => 'Ccmid',
@@ -118,6 +127,10 @@ class Product extends CActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('price',$this->price);
+		$criteria->compare('is_rz',$this->is_rz);
+		$criteria->compare('hits',$this->hits);
+		$criteria->compare('phone',$this->phone,true);
+		$criteria->compare('company',$this->company,true);
 		$criteria->compare('old_price',$this->old_price);
 		$criteria->compare('type',$this->type,true);
 		$criteria->compare('ccmid',$this->ccmid);
