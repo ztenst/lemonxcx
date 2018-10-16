@@ -8,6 +8,9 @@
  * @property integer $uid
  * @property integer $pid
  * @property integer $puid
+ * @property string $phone
+ * @property string $name
+ * @property string $pname
  * @property integer $type
  * @property integer $created
  * @property integer $updated
@@ -32,9 +35,11 @@ class Log extends CActiveRecord
 		return array(
 			array('created', 'required'),
 			array('uid, pid, puid, type, created, updated', 'numerical', 'integerOnly'=>true),
+			array('phone', 'length', 'max'=>20),
+			array('name, pname', 'length', 'max'=>100),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, uid, pid, puid, type, created, updated', 'safe', 'on'=>'search'),
+			array('id, uid, pid, puid, phone, name, pname, type, created, updated', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -59,6 +64,9 @@ class Log extends CActiveRecord
 			'uid' => 'Uid',
 			'pid' => 'Pid',
 			'puid' => 'Puid',
+			'phone' => 'Phone',
+			'name' => 'Name',
+			'pname' => 'Pname',
 			'type' => 'Type',
 			'created' => 'Created',
 			'updated' => 'Updated',
@@ -87,6 +95,9 @@ class Log extends CActiveRecord
 		$criteria->compare('uid',$this->uid);
 		$criteria->compare('pid',$this->pid);
 		$criteria->compare('puid',$this->puid);
+		$criteria->compare('phone',$this->phone,true);
+		$criteria->compare('name',$this->name,true);
+		$criteria->compare('pname',$this->pname,true);
 		$criteria->compare('type',$this->type);
 		$criteria->compare('created',$this->created);
 		$criteria->compare('updated',$this->updated);

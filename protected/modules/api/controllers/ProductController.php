@@ -86,6 +86,17 @@ class ProductController extends ApiController
 	public function actionInfo($id='',$openid='',$uid='')
 	{
 		$info = ProductExt::model()->findByPk($id);
+		if(!$info) {
+			$this->returnError('产品不存在');
+		} else {
+			$info->hits += 1;
+			$info->save();
+			$obj = new LogExt;
+			$obj->pid = $id;
+			$obj->uid = $uid;
+			$obj->type = 1;
+			$obj->save();
+		}
 		$data = $info->attributes;
 		$images = $info->images;
 		if($images) {
@@ -100,31 +111,51 @@ class ProductController extends ApiController
 				$data['is_save'] = SaveExt::model()->count("pid=$id and uid=$uid")?1:0;
 			}
 		}
-		if($confs = $info->data_conf) {
-			$fields = Yii::app()->file->getFields();
-			$confs = json_decode($confs,true);
-			$ids = $tagname = [];
-			foreach ($confs as $key => $value) {
-				$ids[] = $value;
-			}
-			$criteria = new CDbCriteria;
-			$criteria->select = 'id,name';
-			$criteria->addInCondition('id',$ids);
-
-			$tags = TagExt::model()->findAll($criteria);
+		if($uid) {
+			// $user = UserExt::getUserByOpenId($openid);
+			// if($uid = $user->id) {
+				$data['is_save'] = SaveExt::model()->count("pid=$id and uid=$uid")?1:0;
+			// }
+		}
+		$data['tags'] = [];
+		if(isset(ProductExt::$types[$info->type])) {
+			$tags = ProductExt::$types[$info->type]['tags'];
 			if($tags) {
+				$tagName = TagExt::$xinfangCate['direct'];
 				foreach ($tags as $key => $value) {
-					$tagname[$value['id']] = $value['name'];
+					if($info->$key) {
+						$data['tags'][] = ['name'=>$tagName[$value],'value'=>TagExt::model()->findByPk($info->$key)->name];
+					}
 				}
 			}
-			// var_dump($tags[0]['attributes']);exit;
-			foreach ($confs as $key => $value) {
-				$data['params'][$fields[$key]] = $tagname[$value];
-			}
-			$data['created'] = date('Y-m-d',$data['created']);
-			$data['updated'] = date('Y-m-d',$data['updated']);
-			
 		}
+		// if($confs = $info->data_conf) {
+		// 	$fields = Yii::app()->file->getFields();
+		// 	$confs = json_decode($confs,true);
+		// 	$ids = $tagname = [];
+		// 	foreach ($confs as $key => $value) {
+		// 		$ids[] = $value;
+		// 	}
+		// 	$criteria = new CDbCriteria;
+		// 	$criteria->select = 'id,name';
+		// 	$criteria->addInCondition('id',$ids);
+
+		// 	$tags = TagExt::model()->findAll($criteria);
+		// 	if($tags) {
+		// 		foreach ($tags as $key => $value) {
+		// 			$tagname[$value['id']] = $value['name'];
+		// 		}
+		// 	}
+		// 	// var_dump($tags[0]['attributes']);exit;
+		// 	foreach ($confs as $key => $value) {
+		// 		$data['params'][$fields[$key]] = $tagname[$value];
+		// 	}
+		// 	$data['created'] = date('Y-m-d',$data['created']);
+		// 	$data['updated'] = date('Y-m-d',$data['updated']);
+			
+		// }
+		$data['created'] = date('Y-m-d',$data['created']);
+		$data['updated'] = date('Y-m-d',$data['updated']);
 		$this->frame['data'] = $data;
 	}
 

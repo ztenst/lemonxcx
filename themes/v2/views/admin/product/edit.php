@@ -55,7 +55,7 @@ $childArea = $parent ? AreaExt::model()->getByParent($parent)->normal()->findAll
        <div class="form-group">
             <label class="col-md-2 control-label"><?=TagExt::$xinfangCate['direct'][$value]?></label>
             <div class="col-md-4">
-                <?php echo $form->dropDownList($article, $key, CHtml::listData(TagExt::model()->findAll("cate='$value'"),'id','name'), array('class' => 'form-control', 'encode' => false)); ?>
+                <?php echo $form->dropDownList($article, $key, CHtml::listData(TagExt::model()->findAll("cate='$value'"),'id','name'), array('class' => 'form-control', 'encode' => false,'empty'=>'请选择')); ?>
             </div>
             <div class="col-md-2"><?php echo $form->error($article, $key) ?></div>
         </div>
