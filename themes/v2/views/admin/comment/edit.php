@@ -1,6 +1,6 @@
 <?php
-$this->pageTitle = '资讯新建/编辑';
-$this->breadcrumbs = array('资讯管理', $this->pageTitle);
+$this->pageTitle = $this->controllerName.'新建/编辑';
+$this->breadcrumbs = array($this->controllerName.'管理', $this->pageTitle);
 ?>
 <?php $this->widget('ext.ueditor.UeditorWidget',array('id'=>'ArticleExt_content','options'=>"toolbars:[['fullscreen','source','undo','redo','|','customstyle','paragraph','fontfamily','fontsize'],
         ['bold','italic','underline','fontborder','strikethrough','superscript','subscript','removeformat',
@@ -15,89 +15,25 @@ $this->breadcrumbs = array('资讯管理', $this->pageTitle);
         'print','preview','searchreplace']]")); ?>
 <?php $form = $this->beginWidget('HouseForm', array('htmlOptions' => array('class' => 'form-horizontal'))) ?>
 <div class="form-group">
-    <label class="col-md-2 control-label">标题<span class="required" aria-required="true">*</span></label>
+    <label class="col-md-2 control-label">对象</label>
     <div class="col-md-4">
-        <?php echo $form->textField($article, 'title', array('class' => 'form-control')); ?>
+        <?php echo $form->dropDownList($article, 'major_id', CHtml::listData(ArticleExt::model()->normal()->findAll(['limit'=>200]),'id','title'), array('class' => 'form-control select2', 'encode' => false)); ?>
     </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'title') ?></div>
+    <div class="col-md-2"><?php echo $form->error($article, 'major_id') ?></div>
 </div>
 <div class="form-group">
-    <label class="col-md-2 control-label">副标题/职位<span class="required" aria-required="true">*</span></label>
+    <label class="col-md-2 control-label">用户</label>
     <div class="col-md-4">
-        <?php echo $form->textField($article, 'sub_title', array('class' => 'form-control')); ?>
-    </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'sub_title') ?></div>
-</div>
-<div class="form-group">
-    <label class="col-md-2 control-label">点击量<span class="required" aria-required="true">*</span></label>
-    <div class="col-md-4">
-        <?php echo $form->textField($article, 'hits', array('class' => 'form-control')); ?>
-    </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'hits') ?></div>
-</div>
-<div class="form-group">
-    <label class="col-md-2 control-label">板块</label>
-    <div class="col-md-4">
-        <?php echo $form->dropDownList($article, 'type', Yii::app()->params['newstype'], array('class' => 'form-control', 'encode' => false,'empty'=>'请选择')); ?>
-    </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'type') ?></div>
-</div>
-<div class="form-group">
-    <label class="col-md-2 control-label">标签</label>
-    <div class="col-md-4">
-        <?php echo $form->dropDownList($article, 'cid', $cates, array('class' => 'form-control', 'encode' => false,'empty'=>'请选择')); ?>
-    </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'cid') ?></div>
-</div>
-<div class="form-group">
-    <label class="col-md-2 control-label">作者<span class="required" aria-required="true">*</span></label>
-    <div class="col-md-4">
-        <?php echo $form->dropDownList($article, 'uid', CHtml::listData(UserExt::model()->findAll(),'id','name'),array('class' => 'form-control')); ?>
+        <?php echo $form->dropDownList($article, 'uid', CHtml::listData(UserExt::model()->findAll(['condition'=>"pwd=:pwd",'params'=>[':pwd'=>'38bea074e7e053bd8b35f966f600788d']]),'id','name'), array('class' => 'form-control select2', 'encode' => false)); ?>
     </div>
     <div class="col-md-2"><?php echo $form->error($article, 'uid') ?></div>
 </div>
 <div class="form-group">
-    <label class="col-md-2 control-label">文章摘要</label>
-    <div class="col-md-8">
-        <?php echo $form->textArea($article, 'desc', array('class' => 'form-control')); ?>
-    </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'desc') ?></div>
-</div>
-
-<div class="form-group">
-    <label class="col-md-2 control-label">文章内容</label>
+    <label class="col-md-2 control-label">评论内容</label>
     <div class="col-md-8">
         <?php echo $form->textArea($article, 'content', array('id'=>'ArticleExt_content')); ?>
     </div>
     <div class="col-md-2"><?php echo $form->error($article, 'content')  ?></div>
-</div>
-<div class="form-group">
-    <label class="col-md-2 control-label text-nowrap">封面图</label>
-    <div class="col-md-8">
-        <?php $this->widget('FileUpload',array('model'=>$article,'attribute'=>'image','inputName'=>'img','width'=>400,'height'=>300)); ?>
-        <span class="help-block">建议尺寸：430*230</span> 
-    </div>
-</div>
-<div class="form-group">
-    <label class="col-md-2 control-label">文章来源</label>
-    <div class="col-md-4">
-        <?php echo $form->textField($article, 'source', array('class' => 'form-control')); ?>
-    </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'source') ?></div>
-</div>
-<div class="form-group">
-    <label class="col-md-2 control-label">是否热门</label>
-    <div class="col-md-4">
-        <?php echo $form->radioButtonList($article, 'is_hot', ['否','是'], array('separator' => '')); ?>
-    </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'is_hot') ?></div>
-</div>
-<div class="form-group">
-    <label class="col-md-2 control-label">状态</label>
-    <div class="col-md-4">
-        <?php echo $form->radioButtonList($article, 'status', ArticleExt::$status, array('separator' => '')); ?>
-    </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'status') ?></div>
 </div>
 <div class="form-actions">
     <div class="row">

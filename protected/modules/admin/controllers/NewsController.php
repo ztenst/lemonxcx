@@ -14,12 +14,12 @@ class NewsController extends AdminController{
 	public function init()
 	{
 		parent::init();
-		$this->cates = CHtml::listData(TagExt::model()->getTagByCate('wzlm')->normal()->findAll(),'id','name');
+		$this->cates = CHtml::listData(TagExt::model()->getTagByCate('wzbq')->normal()->findAll(),'id','name');
 	}
 	/**
 	 * 文章列表
 	 */
-	public function actionList($type='title',$value='',$time_type='created',$time='',$cate='',$type='')
+	public function actionList($type='title',$value='',$time_type='created',$time='',$cate='',$type='',$is_hot='')
 	{
 		/**
 		 * yii的db操作可以通过criteria类 用法超级简单
@@ -47,6 +47,10 @@ class NewsController extends AdminController{
 			$criteria->addCondition('cid=:cid');
 			$criteria->params[':cid'] = $cate;
 		}
+		if(is_numeric($is_hot)) {
+			$criteria->addCondition('is_hot=:is_hot');
+			$criteria->params[':is_hot'] = $is_hot;
+		}
 		if($type) {
 			$criteria->addCondition('type=:type');
 			$criteria->params[':type'] = $type;
@@ -63,7 +67,7 @@ class NewsController extends AdminController{
             'value' => $value,
             'time' => $time,
             'time_type' => $time_type,
-            'cate'=>$cate,'type'=>$type]);
+            'cate'=>$cate,'type'=>$type,'is_hot'=>$is_hot]);
 	}
 
 	public function actionEdit($id = 0)

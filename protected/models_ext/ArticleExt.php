@@ -35,6 +35,7 @@ class ArticleExt extends Article{
         return array(
             'cate'=>array(self::BELONGS_TO, 'TagExt', 'cid'),
             'user'=>array(self::BELONGS_TO, 'UserExt', 'uid'),
+            'comments'=>array(self::HAS_MANY, 'CommentExt', 'major_id'),
 
         );
     }

@@ -23,7 +23,8 @@ class SiteExt extends Site{
         'productnotice'=>'',
         'sitecolor'=>'',
         'sitename'=>'',
-        'rzwords'=>''
+        'rzwords'=>'',
+        'usernopic'=>'',
     ];
     public static $cateName = [
         'qjpz' => '全局配置',
@@ -36,6 +37,7 @@ class SiteExt extends Site{
             'indeximages'=>['type'=>'multiImage','max'=>5,'name'=>'首页轮播图'],
             'productnopic'=>['type'=>'image','max'=>1,'name'=>'默认产品图片'],
             'articlenopic'=>['type'=>'image','max'=>1,'name'=>'默认文章图片'],
+            'usernopic'=>['type'=>'image','max'=>1,'name'=>'默认用户图片'],
             'appid'=>['type'=>'text','name'=>'appid'],
             'apps'=>['type'=>'text','name'=>'appsecret'],
             'mch_id'=>['type'=>'text','name'=>'商户ID'],

@@ -8,13 +8,14 @@ class CusController extends ApiController
 		$page = (int)Yii::app()->request->getQuery('page',1);
 		$limit = (int)Yii::app()->request->getQuery('limit',20);
         $uid = (int)Yii::app()->request->getQuery('uid',0);
+        $type = (int)Yii::app()->request->getQuery('type',0);
         $save = (int)Yii::app()->request->getQuery('save',0);
         $savetype = (int)Yii::app()->request->getQuery('savetype',0);
 		$kw = $this->cleanXss(Yii::app()->request->getQuery('kw',''));
 		$criteria = new CDbCriteria;
 		$criteria->order = 't.sort desc,t.updated desc';
 		$criteria->limit = $limit;
-		// $criteria->addCondition('t.type=2');
+		$criteria->addCondition('t.status=1');
 		if($kw) {
 			$criteria->addSearchCondition('title',$kw);
 		}
@@ -26,7 +27,10 @@ class CusController extends ApiController
             $criteria->addCondition("uid=:uid");
             $criteria->params[':uid'] = $uid;
         }
-
+        if($type) {
+            $criteria->addCondition("type=:type");
+            $criteria->params[':type'] = $type;
+        }
         if($savetype&&$save&&$uid) {
             $ids = [];
             $saeids = Yii::app()->db->createCommand("select pid from save where uid=$uid and type=$savetype")->queryAll();
@@ -46,10 +50,12 @@ class CusController extends ApiController
 					'id'=>$value->id,
 					'name'=>Tools::u8_title_substr($value->title,20),
 					'cate'=>$value->cate?$value->cate->name:'',
-					'date'=>date('m-d',$value->updated),
+					'date'=>date('Y-m-d H:i',$value->updated),
 					'author'=>$value->user?$value->user->name:'',
 					'save_num'=>Yii::app()->db->createCommand("select count(id) from save where type=2 and pid=".$value->id)->queryScalar(),
 					'praise_num'=>Yii::app()->db->createCommand("select count(id) from praise where cid=".$value->id)->queryScalar(),
+                    'is_hot'=>$value->is_hot,
+                    'hits'=>$value->hits,
 					// 'price'=>$value->price,
 					// 'old_price'=>$value->old_price,
 					// 'ts'=>$value->shortdes,
@@ -64,13 +70,44 @@ class CusController extends ApiController
 		$this->frame['data'] = $data;
 	}
 
+    public function actionNewsTags()
+    {
+        $data = [];
+        $tags = TagExt::model()->findAll("cate='wzbq'");
+        if($tags) {
+            foreach ($tags as $key => $value) {
+                $data[] = ['id'=>$value->id,'name'=>$value->name];
+            }
+        }
+        $this->frame['data'] = $data;
+    }
+
 	public function actionInfo($id)
 	{
+        $data = [];
 		$info = ArticleExt::model()->findByPk($id);
-		$data = $info->attributes;
-		$data['image'] = ImageTools::fixImage($data['image'],700,360);
-		$data['created'] = date('Y-m-d',$data['created']);
-		$data['updated'] = date('Y-m-d',$data['updated']);
+        $info->hits += 1;
+        $info->save();
+        $user = $info->user;
+        $usernopic = SiteExt::getAttr('qjpz','usernopic');
+        $data = [
+            'id'=>$info->id,
+            'title'=>$info->title,
+            'author'=>$user?$user->name:'暂无',
+            'image'=>$user&&$user->image?ImageTools::fixImage($data['image'],200,200):ImageTools::fixImage($usernopic,200,200),
+            'time'=>date('Y-m-d H:i',$data['updated']),
+            'content'=>$info->content,
+        ];
+        if($comments = $info->comments) {
+
+        }
+		// $data = $info->attributes;
+        // if($info->user) {
+
+        // }
+		// $data['image'] = ImageTools::fixImage($data['image'],700,360);
+		// $data['created'] = date('Y-m-d',$data['created']);
+		// $data['updated'] = date('Y-m-d',$data['updated']);
 		$this->frame['data'] = $data;
 	}
 
