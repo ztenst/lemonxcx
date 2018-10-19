@@ -84,7 +84,7 @@ class CusController extends ApiController
 
 	public function actionInfo($id)
 	{
-        $data = [];
+        $data = $data['comments'] = [];
 		$info = ArticleExt::model()->findByPk($id);
         $info->hits += 1;
         $info->save();
@@ -99,7 +99,9 @@ class CusController extends ApiController
             'content'=>$info->content,
         ];
         if($comments = $info->comments) {
-
+            foreach ($comments as $key => $value) {
+                # code...
+            }
         }
 		// $data = $info->attributes;
         // if($info->user) {
