@@ -6,6 +6,7 @@
  * The followings are the available columns in table 'product':
  * @property integer $id
  * @property string $name
+ * @property integer $uid
  * @property double $price
  * @property integer $is_rz
  * @property integer $hits
@@ -49,7 +50,7 @@ class Product extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('company, created', 'required'),
-			array('is_rz, hits, ccmid, cadrid, street, area, mid, fid, cid, sort, deleted, status, created, updated', 'numerical', 'integerOnly'=>true),
+			array('uid, is_rz, hits, ccmid, cadrid, street, area, mid, fid, cid, sort, deleted, status, created, updated', 'numerical', 'integerOnly'=>true),
 			array('price, old_price', 'numerical'),
 			array('name, type, image', 'length', 'max'=>255),
 			array('phone', 'length', 'max'=>20),
@@ -57,7 +58,7 @@ class Product extends CActiveRecord
 			array('content, data_conf', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, name, price, is_rz, hits, phone, company, old_price, type, ccmid, cadrid, street, area, mid, fid, cid, image, shortdes, content, data_conf, sort, deleted, status, created, updated', 'safe', 'on'=>'search'),
+			array('id, name, uid, price, is_rz, hits, phone, company, old_price, type, ccmid, cadrid, street, area, mid, fid, cid, image, shortdes, content, data_conf, sort, deleted, status, created, updated', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -80,6 +81,7 @@ class Product extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'name' => 'Name',
+			'uid' => 'Uid',
 			'price' => 'Price',
 			'is_rz' => 'Is Rz',
 			'hits' => 'Hits',
@@ -126,6 +128,7 @@ class Product extends CActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('name',$this->name,true);
+		$criteria->compare('uid',$this->uid);
 		$criteria->compare('price',$this->price);
 		$criteria->compare('is_rz',$this->is_rz);
 		$criteria->compare('hits',$this->hits);

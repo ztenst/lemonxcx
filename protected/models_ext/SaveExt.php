@@ -89,10 +89,14 @@ class SaveExt extends Save{
 
     public function getObjTitle()
     {
-        if($this->type==1) {
-            return $model = ProductExt::model()->findByPk($this->pid)->name;
-        } elseif($this->type==2) {
-            return $model = ArticleExt::model()->findByPk($this->pid)->title;
+        if($this->pid) {
+            if($this->type==1) {
+                return $model = ProductExt::model()->findByPk($this->pid)->name;
+            } elseif($this->type==2) {
+                return $model = ArticleExt::model()->findByPk($this->pid)->title;
+            }
+        } else {
+            return false;
         }
     }
 

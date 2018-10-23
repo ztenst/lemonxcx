@@ -16,7 +16,7 @@ $this->breadcrumbs = array($this->pageTitle);
             </div>
             <?php Yii::app()->controller->widget("DaterangepickerWidget",['time'=>$time,'params'=>['class'=>'form-control chose_text']]);?>
             <div class="form-group">
-                <?php echo CHtml::dropDownList('cate',$cate,$cates,array('class'=>'form-control chose_select','encode'=>false,'prompt'=>'--选择类型--')); ?>
+                <?php echo CHtml::dropDownList('cate',$cate,$cates,array('class'=>'form-control chose_select','encode'=>false,'prompt'=>'--选择状态--')); ?>
             </div>
             
             <button type="submit" class="btn blue">搜索</button>
@@ -46,6 +46,7 @@ $this->breadcrumbs = array($this->pageTitle);
         <th class="text-center">排序</th>
         <th class="text-center">ID</th>
         <th class="text-center">名称</th>
+        <th class="text-center">发布者</th>
         <th class="text-center">类型</th>
         <th class="text-center">添加时间</th>
         <th class="text-center">修改时间</th>
@@ -54,17 +55,30 @@ $this->breadcrumbs = array($this->pageTitle);
     </tr>
     </thead>
     <tbody>
-    <?php foreach($infos as $k=>$v): ?>
+    <?php foreach($infos as $k=>$v): $user = $v->user; ?>
         <tr>
         <td style="text-align:center;vertical-align: middle" class="warning sort_edit"
                 data-id="<?php echo $v['id'] ?>"><?php echo $v['sort'] ?></td>
             <td style="text-align:center;vertical-align: middle"><?php echo $v->id; ?></td>
             <td class="text-center"><?=$v->name?></td>
+            <td class="text-center"><?=$user?($user->name.$user->phone):'暂无'?></td>
             <td class="text-center"><?=TagExt::getNameByTag($v->cid)?></td>          
             <td class="text-center"><?=date('Y-m-d',$v->created)?></td>
             <td class="text-center"><?=date('Y-m-d',$v->updated)?></td>
-            <td class="text-center"><?php echo CHtml::ajaxLink(ProductExt::$status[$v->status],$this->createUrl('changeStatus'), array('type'=>'get', 'data'=>array('id'=>$v->id,'class'=>get_class($v)),'success'=>'function(data){location.reload()}'), array('class'=>'btn btn-sm '.ProductExt::$statusStyle[$v->status])); ?></td>
-            <td style="text-align:center;vertical-align: middle">
+<td class="text-center" style="text-align:center;vertical-align: middle">
+                <div class="btn-group">
+                    <button id="btnGroupVerticalDrop1" type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                    <?=ProductExt::$status[$v->status]?> <i class="fa fa-angle-down"></i>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                    <?php foreach(ProductExt::$status as $key=>$v1){?>
+                        <li>
+                            <?=CHtml::ajaxLink($v1,$this->createUrl('changeStatus',['kw'=>$key,'id'=>$v->id]),['success'=>'function(){location.reload();}'])?>
+                        </li>
+                      <?php  }?>
+                    </ul>
+                </div>
+            </td>            <td style="text-align:center;vertical-align: middle">
                 <a href="<?=$this->createUrl('imagelist',['hid'=>$v->id])?>" class="btn btn-xs yellow">相册</a>
                 <a href="<?php echo $this->createUrl('/admin/product/edit',array('id'=>$v->id,'type'=>$v->type)); ?>" class="btn default btn-xs green"><i class="fa fa-edit"></i> 修改 </a>
                 <?php echo CHtml::htmlButton('删除', array('data-toggle'=>'confirmation', 'class'=>'btn btn-xs red', 'data-title'=>'确认删除？', 'data-btn-ok-label'=>'确认', 'data-btn-cancel-label'=>'取消', 'data-popout'=>true,'ajax'=>array('url'=>$this->createUrl('del'),'type'=>'get','success'=>'function(data){location.reload()}','data'=>array('id'=>$v->id,'class'=>get_class($v)))));?>

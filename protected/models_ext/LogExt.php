@@ -55,6 +55,7 @@ class LogExt extends Log{
         if($this->pid&&!$this->pname) {
             if($pro = $this->pro) {
                 $this->pname = $pro->name;
+                $this->puid = $pro->uid;
             }
         }
         if($this->getIsNewRecord()) {

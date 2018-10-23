@@ -5,9 +5,10 @@ class IndexController extends ApiController
     {
         // 站点颜色 tab 文字和图案 站点名
         $data = [
-            'color'=>Yii::app()->file->color,
-            'sitename'=>Yii::app()->file->sitename,
+            // 'color'=>Yii::app()->file->color,
+            // 'sitename'=>Yii::app()->file->sitename,
             'phone'=>SiteExt::getAttr('qjpz','tel'),
+            'shengming'=>SiteExt::getAttr('qjpz','shengming'),
             // 'sitename'=>Yii::app()->file->sitename,
         ];
         $this->frame['data'] = $data;
@@ -240,5 +241,16 @@ class IndexController extends ApiController
             echo $errCode;
             Yii::app()->end();
         }
+    }
+
+    public function actionCompleteInfo()
+    {
+        $arr = Yii::app()->request->getPost("UserExt",[]);
+        $user = UserExt::model()->findByPk($id);
+        if(!$user) {
+            return $this->returnError('用户不存在');
+        }
+        $user->attributes = $arr;
+        $user->save();
     }
 }

@@ -58,7 +58,20 @@ $this->breadcrumbs = array($this->pageTitle);
             <td class="text-center"><?=$v->is_hot?'是':'否'?></td>        
             <td class="text-center"><?=date('Y-m-d',$v->created)?></td>
             <td class="text-center"><?=date('Y-m-d',$v->updated)?></td>
-            <td class="text-center"><?php echo CHtml::ajaxLink(ArticleExt::$status[$v->status],$this->createUrl('ajaxChangeStatus'), array('type'=>'get', 'data'=>array('id'=>$v->id),'success'=>'function(data){location.reload()}'), array('class'=>'btn btn-sm '.ArticleExt::$statusStyle[$v->status])); ?></td>
+<td class="text-center" style="text-align:center;vertical-align: middle">
+                <div class="btn-group">
+                    <button id="btnGroupVerticalDrop1" type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                    <?=ProductExt::$status[$v->status]?> <i class="fa fa-angle-down"></i>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                    <?php foreach(ProductExt::$status as $key=>$v1){?>
+                        <li>
+                            <?=CHtml::ajaxLink($v1,$this->createUrl('changeStatus',['kw'=>$key,'id'=>$v->id]),['success'=>'function(){location.reload();}'])?>
+                        </li>
+                      <?php  }?>
+                    </ul>
+                </div>
+            </td>
 
             <td style="text-align:center;vertical-align: middle">
             <a href="<?=$this->createUrl('imagelist',['hid'=>$v->id])?>" class="btn btn-xs yellow">相册</a>

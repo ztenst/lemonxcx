@@ -181,4 +181,11 @@ class NewsController extends AdminController{
 		} 
 		$this->render('imageedit',['article'=>$info,'hid'=>$hid]);
 	}
+	public function actionChangeStatus($id='',$kw='')
+	{
+		$obj = ProductExt::model()->findByPk($id);
+		$obj->status = $kw;
+		$obj->save();
+		$this->setMessage('操作成功');
+	}
 }

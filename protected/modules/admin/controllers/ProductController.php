@@ -16,7 +16,7 @@ class ProductController extends AdminController{
 	{
 		parent::init();
 		$this->controllerName = '产品';
-		$this->cates = CHtml::listData(TagExt::model()->normal()->findAll("cate='pcate'"),'id','name');
+		// $this->cates = CHtml::listData(TagExt::model()->normal()->findAll("cate='pcate'"),'id','name');
 		// $this->cates1 = CHtml::listData(TeamExt::model()->normal()->findAll(),'id','name');
 	}
 	public function actionList($type='title',$value='',$time_type='created',$time='',$cate='',$cate1='')
@@ -39,16 +39,16 @@ class ProductController extends AdminController{
             $criteria->params[':endTime'] = TimeTools::getDayEndTime($endTime);
 
         }
-		if($cate) {
-			$criteria->addCondition('cid=:cid');
-			$criteria->params[':cid'] = $cate;
+		if(is_numeric($cate)) {
+			$criteria->addCondition('status=:status');
+			$criteria->params[':status'] = $cate;
 		}
 		if($cate1) {
 			$criteria->addCondition('tid=:cid');
 			$criteria->params[':cid'] = $cate1;
 		}
 		$infos = $modelName::model()->undeleted()->getList($criteria,20);
-		$this->render('list',['cate'=>$cate,'cate1'=>$cate1,'infos'=>$infos->data,'cates'=>$this->cates,'cates1'=>$this->cates1,'pager'=>$infos->pagination,'type' => $type,'value' => $value,'time' => $time,'time_type' => $time_type,]);
+		$this->render('list',['cate'=>$cate,'cate1'=>$cate1,'infos'=>$infos->data,'cates'=>ProductExt::$status,'cates1'=>$this->cates1,'pager'=>$infos->pagination,'type' => $type,'value' => $value,'time' => $time,'time_type' => $time_type,]);
 	}
 
 	public function actionEdit($id='',$type='')
@@ -120,5 +120,13 @@ class ProductController extends AdminController{
 			}
 		} 
 		$this->render('imageedit',['article'=>$info,'hid'=>$hid]);
+	}
+
+	public function actionChangeStatus($id='',$kw='')
+	{
+		$obj = ProductExt::model()->findByPk($id);
+		$obj->status = $kw;
+		$obj->save();
+		$this->setMessage('操作成功');
 	}
 }

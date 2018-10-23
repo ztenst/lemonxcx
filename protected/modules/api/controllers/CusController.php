@@ -12,19 +12,20 @@ class CusController extends ApiController
         $save = (int)Yii::app()->request->getQuery('save',0);
         $savetype = (int)Yii::app()->request->getQuery('savetype',0);
 		$kw = $this->cleanXss(Yii::app()->request->getQuery('kw',''));
+        $status = Yii::app()->request->getQuery('status',1);
 		$criteria = new CDbCriteria;
 		$criteria->order = 't.sort desc,t.updated desc';
 		$criteria->limit = $limit;
-		$criteria->addCondition('t.status=1');
+		// $criteria->addCondition('t.status=1');
 		if($kw) {
-			$criteria->addSearchCondition('title',$kw);
+			$criteria->addSearchCondition('t.title',$kw);
 		}
 		if($cid) {
-			$criteria->addCondition("cid=:cid");
+			$criteria->addCondition("t.cid=:cid");
 			$criteria->params[':cid'] = $cid;
 		}
         if($uid) {
-            $criteria->addCondition("uid=:uid");
+            $criteria->addCondition("t.uid=:uid");
             $criteria->params[':uid'] = $uid;
         }
         if($type) {
@@ -41,7 +42,10 @@ class CusController extends ApiController
             }
             $criteria->addInCondition('t.id',$ids);
         }
-		$ress = ArticleExt::model()->with('cate')->getList($criteria);
+        if(is_numeric($status)) {
+            $criteria->addCondition('t.status='.$status);
+        }
+		$ress = ArticleExt::model()->getList($criteria);
 		$infos = $ress->data;
 		$pager = $ress->pagination;
 		if($infos) {
@@ -49,13 +53,15 @@ class CusController extends ApiController
 				$data['list'][] = [
 					'id'=>$value->id,
 					'name'=>Tools::u8_title_substr($value->title,20),
-					'cate'=>$value->cate?$value->cate->name:'',
+					// 'cate'=>$value->cate?$value->cate->name:'',
 					'date'=>date('Y-m-d H:i',$value->updated),
 					'author'=>$value->user?$value->user->name:'',
 					'save_num'=>Yii::app()->db->createCommand("select count(id) from save where type=2 and pid=".$value->id)->queryScalar(),
 					'praise_num'=>Yii::app()->db->createCommand("select count(id) from praise where cid=".$value->id)->queryScalar(),
                     'is_hot'=>$value->is_hot,
                     'hits'=>$value->hits,
+                    'status'=>$value->status,
+                    'status_word'=>ProductExt::$status[$value->status],
 					// 'price'=>$value->price,
 					// 'old_price'=>$value->old_price,
 					// 'ts'=>$value->shortdes,
@@ -82,7 +88,7 @@ class CusController extends ApiController
         $this->frame['data'] = $data;
     }
 
-	public function actionInfo($id)
+	public function actionInfo($id='',$uid='0')
 	{
         $data = $data['comments'] = [];
 		$info = ArticleExt::model()->findByPk($id);
@@ -90,17 +96,38 @@ class CusController extends ApiController
         $info->save();
         $user = $info->user;
         $usernopic = SiteExt::getAttr('qjpz','usernopic');
+        $images = $imgs = [];
+        if($imgsarr = AlbumExt::model()->findAll("pid=$id and type=2")) {
+            foreach ($imgsarr as $key => $value) {
+                $images[] = ImageTools::fixImage($value->url,600,600);
+                $imgs[] = $value->url;
+            }
+        }
         $data = [
             'id'=>$info->id,
             'title'=>$info->title,
             'author'=>$user?$user->name:'暂无',
-            'image'=>$user&&$user->image?ImageTools::fixImage($data['image'],200,200):ImageTools::fixImage($usernopic,200,200),
-            'time'=>date('Y-m-d H:i',$data['updated']),
+            'image'=>$user&&$user->image?ImageTools::fixImage($user['image'],200,200):ImageTools::fixImage($usernopic,200,200),
+            'time'=>date('Y-m-d H:i',$info['updated']),
             'content'=>$info->content,
+            'hits'=>$info->hits,
+            'imgs'=>$imgs,
+            'images'=>$images,
+            'is_save'=>SaveExt::model()->find("type=2 and uid=$uid and pid=$id")?1:0,
         ];
         if($comments = $info->comments) {
             foreach ($comments as $key => $value) {
-                # code...
+                $user = $value->user;
+                // $
+                $tmp = [
+                    'id'=>$value->id,
+                    'image'=>$user->image?ImageTools::fixImage($user['image'],200,200):ImageTools::fixImage($usernopic,200,200),
+                    'name'=>$user->name,
+                    'content'=>$value->content,
+                    'time'=>date('Y-m-d H:i',$value['updated']),
+                    'praises'=>$value->praise,
+                ];
+                $data['comments'][] = $tmp;
             }
         }
 		// $data = $info->attributes;
@@ -160,35 +187,84 @@ class CusController extends ApiController
     public function actionAddNews()
     {
     	if(Yii::app()->request->getIsPostRequest()) {
+            $id = Yii::app()->request->getPost('id','');
     		$uid = Yii::app()->request->getPost('uid','');
     		$title = Yii::app()->request->getPost('title','');
     		$content = Yii::app()->request->getPost('content','');
     		$fm = Yii::app()->request->getPost('fm','');
     		$imgs = Yii::app()->request->getPost('imgs','');
+            $cid = Yii::app()->request->getPost('cid','');
     		if(!$uid || !$title || !$content) {
     			return $this->returnError('参数错误');
     		}
-    		$obj = new ArticleExt;
+    		$obj = $id?ArticleExt::model()->findByPk($id):new ArticleExt;
     		$obj->status = 0;
     		$obj->uid = $uid;
     		$obj->title = $title;
     		$obj->content = $content;
     		$obj->image = $fm;
     		if($obj->save()) {
-    			if($imgs = explode(',', $imgs)) {
-    				foreach ($imgs as $key => $value) {
-    					$im = new AlbumExt;
-    					$im->url = $value;
-    					$im->pid = $obj->id;
-    					$im->type = 2;
-    					$im->save();
-    				}
-    			}
+    			Yii::app()->db->createCommand("delete from album where pid=".$obj->id." and type=2")->execute();
+                // AlbumExt::model()->deteleAllByAttributes(['pid'=>$arrs['id'],'type'=>1]);
+                if($imgs) {
+                    if(!is_array($imgs)) {
+                        if(strstr($imgs,',')) {
+                            $imgs = explode(',', $imgs);
+                        } else {
+                            $imgs = [$imgs];
+                        }
+                    }
+                        
+                    foreach ($imgs as $key => $value) {
+                        $im = new AlbumExt;
+                        $im->pid = $obj->id;
+                        $im->url = $value;
+                        $im->type = 2;
+                        $im->save();
+                    }
+                }
     		} else {
     			return $this->returnError(current(current($obj->getErrors())));
     		}
 
 
     	}
+    }
+
+    public function actionAddLog($uid='',$pid='',$type='')
+    {
+        $obj = new LogExt;
+        $obj->uid = $uid;
+        $obj->pid = $pid;
+        $obj->type = $type;
+        $obj->save();
+        $this->returnSuccess('操作成功');
+    }
+    public function actionLogList($uid='',$type='',$utype=1)
+    {
+        if($utype==1) {
+            $logs = LogExt::model()->findAll("puid=$uid");
+        } else {
+            $logs = LogExt::model()->findAll("uid=$uid");
+        }
+        $data = [];
+        if($logs) {
+            foreach ($logs as $key => $value) {
+                $data[] = [
+                    'id'=>$value->id,
+                    'name'=>$utype==1?$value->name:'我',
+                    'words'=>LogExt::$type[$type].'了商品 '.$value->pname,
+                    'time'=>date('Y-m-d H:i',$value->created),
+                ];
+            }
+        }
+        $this->frame['data'] = $data;
+    }
+
+    public function actionChangeStatus($id='',$status='')
+    {
+        $obj = ArticleExt::model()->findByPk($id);
+        $obj->status = $status;
+        $obj->save();
     }
 }

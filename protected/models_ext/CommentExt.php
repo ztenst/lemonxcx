@@ -13,6 +13,7 @@ class CommentExt extends Comment{
         return array(
             'news'=>array(self::BELONGS_TO, 'ArticleExt', ['major_id'=>'id']),
             'user'=>array(self::BELONGS_TO, 'UserExt', 'uid'),
+            'praises'=>array(self::STAT, 'PraiseExt', 'cid'),
         );
     }
 

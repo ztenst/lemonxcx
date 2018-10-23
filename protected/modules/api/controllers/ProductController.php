@@ -18,6 +18,7 @@ class ProductController extends ApiController
 		$order = (int)Yii::app()->request->getQuery('order',0);
 		$page = (int)Yii::app()->request->getQuery('page',1);
 		$limit = (int)Yii::app()->request->getQuery('limit',20);
+		$status = Yii::app()->request->getQuery('status',1);
 		$kw = $this->cleanXss(Yii::app()->request->getQuery('kw',''));
 		!$page && $page = 1;
 		$criteria = new CDbCriteria;
@@ -57,7 +58,13 @@ class ProductController extends ApiController
 			}
 			$criteria->addInCondition('id',$ids);
 		}
-		$ress = ProductExt::model()->normal()->getList($criteria,$limit);
+		if($uid) {
+			$criteria->addCondition('uid='.$uid);
+		}
+		if(is_numeric($status)) {
+			$criteria->addCondition('status='.$status);
+		}
+		$ress = ProductExt::model()->getList($criteria,$limit);
 		$infos = $ress->data;
 		$pager = $ress->pagination;
 		if($infos) {
@@ -67,6 +74,8 @@ class ProductController extends ApiController
 					'id'=>$value->id,
 					'name'=>Tools::u8_title_substr($value->name,20),
 					'rzwords'=>$value->is_rz?$rzwords:'',
+					'status'=>$value->status,
+					'status_word'=>ProductExt::$status[$value->status],
 					'company'=>$value->company,
 					'price'=>$value->price,
 					'hits'=>$value->hits,
@@ -101,7 +110,8 @@ class ProductController extends ApiController
 		$images = $info->images;
 		if($images) {
 			foreach ($images as $key => $value) {
-				$data['images'][] = ImageTools::fixImage($value->url); 
+				$data['images'][] = ImageTools::fixImage($value->url,600,600); 
+				$data['imgs'][] = $value->url; 
 			}
 		}
 		$data['is_save'] = 0;
@@ -118,6 +128,13 @@ class ProductController extends ApiController
 			// }
 		}
 		$data['tags'] = [];
+		$data['tags'][] = ['name'=>'商家','value'=>$info->company];
+		if($info->area || $info->street) {
+			$cd = '';
+			$info->area && $cd .= AreaExt::model()->findByPk($info->area)->name;
+			$info->street && $cd .= AreaExt::model()->findByPk($info->street)->name;
+			$data['tags'][] = ['name'=>'产地','value'=>$cd];
+		}
 		if(isset(ProductExt::$types[$info->type])) {
 			$tags = ProductExt::$types[$info->type]['tags'];
 			if($tags) {
@@ -211,22 +228,31 @@ class ProductController extends ApiController
         }
 	}	
 
-    public function actionAddSave($pid='',$openid='')
+    public function actionAddSave($pid='',$uid='',$type='')
     {
-        if($pid&&$openid) {
-            $staff = UserExt::getUserByOpenId($openid);
-            if($save = SaveExt::model()->find('pid='.(int)$pid.' and type=1 and uid='.$staff->id)) {
-                SaveExt::model()->deleteAllByAttributes(['pid'=>$pid,'uid'=>$staff->id,'type'=>1]);
+        if($pid&&$uid) {
+            $staff = UserExt::model()->findByPk($uid);
+            if($save = SaveExt::model()->find('pid='.(int)$pid.' and type='.$type.' and uid='.$staff->id)) {
+                SaveExt::model()->deleteAllByAttributes(['pid'=>$pid,'uid'=>$staff->id,'type'=>$type]);
                 $this->frame['data'] = 0;
                 $this->returnSuccess('取消收藏成功');
             } else {
                 $save = new SaveExt;
                 $save->uid = $staff->id;
                 $save->pid = $pid;
-                $save->type = 1;
+                $save->type = $type;
                 $save->save();
+                if($type==1) {
+                	$obj = new LogExt;
+					$obj->pid = $pid;
+					$obj->uid = $uid;
+					$obj->type = 3;
+					$obj->save();
+                }
+	                
                 $this->frame['data'] = 1;
                 $this->returnSuccess('收藏成功');
+
             }
         }else {
             $this->returnError('请登录后操作');
@@ -304,6 +330,91 @@ class ProductController extends ApiController
         $res = HttpHelper::getHttps($url);
         $data = json_decode($res['content'],true);
 		return $data['access_token'];
+    }
+
+    public function actionGetTagArr()
+    {
+    	$this->frame['data'] = ['药剂'=>'yj',
+'喷枪'=>'pq',
+'活性炭'=>'hxt',
+'净化器'=>'jhq',
+'净水器'=>'jsq',
+'检测设备'=>'jcsb',
+'耗材'=>'hc',
+'加盟'=>'jm',
+'CMA合作'=>'cma',
+'软件服务'=>'soft',];
+    }
+
+    public function actionGetProTag($type='')
+    {
+    	$types = ProductExt::$types;
+    	if(!isset($types[$type]))
+    		return $this->returnError('参数错误');
+    	$ty = $types[$type];
+    	$data = $data['tags'] = [];
+    	$data = [
+    		'title'=>$ty['name'].'发布',
+    	];
+    	$tags = $ty['tags'];
+    	foreach ($tags as $key => $value) {
+    		$tmp = [
+    			'name'=>TagExt::$xinfangCate['direct'][$value],
+    			'field'=>$key,
+    			'list'=>Yii::app()->db->createCommand("select id,name from tag where status=1 and cate='$value'")->queryAll(),
+    		];
+    		$data['tags'][] = $tmp;
+    	}
+    	$this->frame['data'] = $data;
+    }
+
+    public function actionAddPro()
+    {
+    	$arrs = Yii::app()->request->getPost('ProductExt',[]);
+    	$imgs = $arrs['images'];
+    	unset($arrs['images']);
+    	if(isset($arrs['id'])&&$arrs['id']) {
+    		$obj = ProductExt::model()->findByPk($arrs['id']);
+    	} else {
+    		$obj = new ProductExt;
+    	}
+    	$obj->attributes = $arrs;
+    	$obj->status = 0;
+    	if($obj->save()) {
+    		Yii::app()->db->createCommand("delete from album where pid=".$arrs['id']." and type=1")->execute();
+    		// AlbumExt::model()->deteleAllByAttributes(['pid'=>$arrs['id'],'type'=>1]);
+    		if($imgs) {
+    			if(!is_array($imgs)) {
+    				if(strstr($imgs,',')) {
+	    				$imgs = explode(',', $imgs);
+	    			} else {
+	    				$imgs = [$imgs];
+	    			}
+    			}
+	    			
+    			foreach ($imgs as $key => $value) {
+    				$im = new AlbumExt;
+    				$im->pid = $arrs['id'];
+    				$im->url = $value;
+    				$im->type = 1;
+    				$im->save();
+    			}
+    		}
+    	}
+    	$this->returnSuccess('发布成功');
+    }
+
+    public function actionChangeStatus($id='',$status='')
+    {
+    	$obj = ProductExt::model()->findByPk($id);
+    	$obj->status = $status;
+    	$obj->save();
+    }
+
+    public function actionGetCompany($uid='')
+    {
+    	$obj = UserExt::model()->findByPk($uid);
+    	$this->frame['data'] = $obj->company;
     }
 
 }

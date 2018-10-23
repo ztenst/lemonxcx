@@ -12,13 +12,13 @@ class ProductExt extends Product{
     {
         return array(
             'images'=>array(self::HAS_MANY, 'AlbumExt', 'pid'),
-            // 'news'=>array(self::BELONGS_TO, 'ArticleExt', 'related_id','condition'=>'t.type=1'),
+            'user'=>array(self::BELONGS_TO, 'UserExt', 'uid'),
         );
     }
     public static $status = array(
-        0 => '禁用',
-        1 => '启用',
-        // 2 => '回收站',
+        0 => '审核中',
+        1 => '上架',
+        2 => '下架',
     );
     /**
      * @var array 状态按钮样式

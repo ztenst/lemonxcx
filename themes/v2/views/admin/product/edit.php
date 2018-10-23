@@ -61,7 +61,13 @@ $childArea = $parent ? AreaExt::model()->getByParent($parent)->normal()->findAll
         </div>
     <?php } ?>
     <?php endif;?>
-
+<div class="form-group">
+    <label class="col-md-2 control-label"><?='发布者'?></label>
+    <div class="col-md-4">
+        <?php echo $form->dropDownList($article, 'uid', CHtml::listData(UserExt::model()->findAll(),'id','name'), array('class' => 'form-control', 'encode' => false,'empty'=>'请选择')); ?>
+    </div>
+    <div class="col-md-2"><?php echo $form->error($article, 'uid') ?></div>
+</div>
 <div class="form-group">
     <label class="col-md-2 control-label">点击量<span class="required" aria-required="true">*</span></label>
     <div class="col-md-4">
@@ -125,7 +131,13 @@ $childArea = $parent ? AreaExt::model()->getByParent($parent)->normal()->findAll
         <span class="help-block">建议尺寸：600*400</span> 
     </div>
 </div>
-
+<div class="form-group">
+    <label class="col-md-2 control-label">状态</label>
+    <div class="col-md-4">
+        <?php echo $form->radioButtonList($article, 'status', ProductExt::$status, array('separator' => '')); ?>
+    </div>
+    <div class="col-md-2"><?php echo $form->error($article, 'status') ?></div>
+</div>
 <div class="form-actions">
     <div class="row">
         <div class="col-md-offset-3 col-md-9">
