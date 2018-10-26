@@ -134,8 +134,9 @@ class IndexController extends ApiController
                     // echo json_encode(['open_id'=>'','msg'=>'参数错误']);
                 }
                 Yii::app()->end();
+            } else {
+                Yii::log('no');
             }
-                
         }
     }
 
