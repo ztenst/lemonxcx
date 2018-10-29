@@ -183,7 +183,7 @@ class NewsController extends AdminController{
 	}
 	public function actionChangeStatus($id='',$kw='')
 	{
-		$obj = ProductExt::model()->findByPk($id);
+		$obj = ArticleExt::model()->findByPk($id);
 		$obj->status = $kw;
 		$obj->save();
 		$this->setMessage('操作成功');
