@@ -247,7 +247,7 @@ class IndexController extends ApiController
     public function actionCompleteInfo()
     {
         $arr = Yii::app()->request->getPost("UserExt",[]);
-        $user = UserExt::model()->findByPk($id);
+        $user = UserExt::model()->findByPk($arr['id']);
         if(!$user) {
             return $this->returnError('用户不存在');
         }

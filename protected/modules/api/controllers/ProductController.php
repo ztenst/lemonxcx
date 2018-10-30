@@ -371,7 +371,7 @@ class ProductController extends ApiController
     public function actionAddPro()
     {
     	$arrs = Yii::app()->request->getPost('ProductExt',[]);
-    	$imgs = $arrs['images'];
+    	$imgs = isset($arrs['images'])?$arrs['images']:[];
     	unset($arrs['images']);
     	if(isset($arrs['id'])&&$arrs['id']) {
     		$obj = ProductExt::model()->findByPk($arrs['id']);
@@ -381,7 +381,7 @@ class ProductController extends ApiController
     	$obj->attributes = $arrs;
     	$obj->status = 0;
     	if($obj->save()) {
-    		Yii::app()->db->createCommand("delete from album where pid=".$arrs['id']." and type=1")->execute();
+    		Yii::app()->db->createCommand("delete from album where pid=".$obj->id." and type=1")->execute();
     		// AlbumExt::model()->deteleAllByAttributes(['pid'=>$arrs['id'],'type'=>1]);
     		if($imgs) {
     			if(!is_array($imgs)) {
