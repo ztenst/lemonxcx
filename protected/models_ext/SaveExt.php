@@ -93,7 +93,10 @@ class SaveExt extends Save{
             if($this->type==1) {
                 return $model = ProductExt::model()->findByPk($this->pid)->name;
             } elseif($this->type==2) {
-                return $model = ArticleExt::model()->findByPk($this->pid)->title;
+                if($model = ArticleExt::model()->findByPk($this->pid))
+                    return $model->title;
+                else
+                    return false;
             }
         } else {
             return false;

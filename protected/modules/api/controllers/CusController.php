@@ -24,7 +24,7 @@ class CusController extends ApiController
 			$criteria->addCondition("t.cid=:cid");
 			$criteria->params[':cid'] = $cid;
 		}
-        if($uid) {
+        if($uid&&!$save) {
             $criteria->addCondition("t.uid=:uid");
             $criteria->params[':uid'] = $uid;
         }
@@ -122,6 +122,7 @@ class CusController extends ApiController
             foreach ($comments as $key => $value) {
                 $user = $value->user;
                 // $
+                // if($value->)
                 $tmp = [
                     'id'=>$value->id,
                     'image'=>$user->image?ImageTools::fixImage($user['image'],200,200):ImageTools::fixImage($usernopic,200,200),
@@ -129,7 +130,7 @@ class CusController extends ApiController
                     'content'=>$value->content,
                     'time'=>date('Y-m-d H:i',$value['updated']),
                     'praises'=>$value->praise,
-                    'is_praised'=>!$uid?false:(Yii::app()->db->createCommand("select id from praise where uid=$uid and cid=$id")->queryScalar()?true:false),
+                    'is_praised'=>!$uid?false:(Yii::app()->db->createCommand("select id from praise where uid=$uid and cid=".$value->id)->queryScalar()?true:false),
                 ];
                 $data['comments'][] = $tmp;
             }
