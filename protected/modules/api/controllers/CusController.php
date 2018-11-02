@@ -126,6 +126,7 @@ class CusController extends ApiController
                     'content'=>$value->content,
                     'time'=>date('Y-m-d H:i',$value['updated']),
                     'praises'=>$value->praise,
+                    'is_praised'=>!$uid?false:(Yii::app()->db->createCommand("select id from praise where uid=$uid and cid=$id")->queryScalar()?true:false),
                 ];
                 $data['comments'][] = $tmp;
             }
@@ -266,5 +267,15 @@ class CusController extends ApiController
         $obj = ArticleExt::model()->findByPk($id);
         $obj->status = $status;
         $obj->save();
+    }
+
+    public function actionAddComment()
+    {
+        $values = Yii::app()->request->getPost('CommentExt',[]);
+        $obj = new CommentExt;
+        $obj->attributes = $values;
+        if(!$obj->save()) {
+            $this->returnError(current(current($obj->getErrors())));
+        }
     }
 }
