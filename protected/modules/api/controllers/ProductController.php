@@ -394,7 +394,7 @@ class ProductController extends ApiController
 	    			
     			foreach ($imgs as $key => $value) {
     				$im = new AlbumExt;
-    				$im->pid = $arrs['id'];
+    				$im->pid = $obj->id;
     				$im->url = $value;
     				$im->type = 1;
     				$im->save();
