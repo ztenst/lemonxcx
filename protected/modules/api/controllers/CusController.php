@@ -92,6 +92,9 @@ class CusController extends ApiController
 	{
         $data = $data['comments'] = [];
 		$info = ArticleExt::model()->findByPk($id);
+        if(!$info) {
+            return $this->returnError('帖子不存在');
+        }
         $info->hits += 1;
         $info->save();
         $user = $info->user;
