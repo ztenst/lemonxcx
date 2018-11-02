@@ -15,7 +15,7 @@ class PraiseExt extends Praise{
     {
          return array(
             'user'=>array(self::BELONGS_TO, 'UserExt', 'uid'),
-            'article'=>array(self::BELONGS_TO, 'ArticleExt', 'cid'),
+            'comment'=>array(self::BELONGS_TO, 'CommentExt', 'cid'),
         );
     }
 
@@ -59,11 +59,6 @@ class PraiseExt extends Praise{
     public function afterSave()
     {
         parent::afterSave();
-        if($ar = $this->article) {
-            $num = Yii::app()->db->createCommand("select count(id) from praise where cid=".$this->cid)->queryScalar();
-            $ar->praise = $num;
-            $ar->save();
-        }
     }
 
     /**

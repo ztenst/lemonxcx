@@ -181,8 +181,14 @@ class CusController extends ApiController
                 $save->cid = $cid;
                 // $save->type = 2;
                 $save->save();
+
                 $this->frame['data'] = 1;
                 $this->returnSuccess('点赞成功');
+            }
+            if($ar = $save->comment) {
+                $num = Yii::app()->db->createCommand("select count(id) from praise where cid=".$save->cid)->queryScalar();
+                $ar->praise = $num;
+                $ar->save();
             }
         }else {
             $this->returnError('请登录后操作');
