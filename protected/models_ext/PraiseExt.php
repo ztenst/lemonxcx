@@ -56,6 +56,16 @@ class PraiseExt extends Praise{
         return parent::beforeValidate();
     }
 
+    public function afterSave()
+    {
+        parent::afterSave();
+        if($ar = $this->article) {
+            $num = Yii::app()->db->createCommand("select count(id) from praise where cid=".$this->cid)->queryScalar();
+            $ar->praise = $num;
+            $ar->save();
+        }
+    }
+
     /**
      * 命名范围
      * @return array
