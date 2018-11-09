@@ -37,7 +37,7 @@ class IndexController extends ApiController
 
                 $data['cates'][] = [
                     'id'=>$value->id,
-                    'py'=>$value->name=='论坛'?'luntan':$aats[$value->name],
+                    'py'=>$value->name=='论坛'||$value->name=='行业新闻'?'luntan':$aats[$value->name],
                     'name'=>$value->name,
                     'img'=>ImageTools::fixImage($value->icon,200,200),
                 ];
