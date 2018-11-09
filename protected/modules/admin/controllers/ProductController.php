@@ -129,4 +129,12 @@ class ProductController extends AdminController{
 		$obj->save();
 		$this->setMessage('操作成功');
 	}
+
+	public function actionAjaxSort($id='',$sort='')
+	{
+		$obj = ProductExt::model()->findByPk($id);
+		$obj->sort = $sort;
+		$obj->save();
+		$this->setMessage('操作成功');
+	}
 }
