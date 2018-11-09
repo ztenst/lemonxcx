@@ -209,6 +209,9 @@ class CusController extends ApiController
     			return $this->returnError('参数错误');
     		}
     		$obj = $id?ArticleExt::model()->findByPk($id):new ArticleExt;
+            if($obj->getIsNewRecord()&&ArticleExt::model()->find("title='$title'")) {
+                return $this->returnError('帖子名已存在，请勿重复发布');
+            }
     		$obj->status = 0;
     		$obj->uid = $uid;
     		$obj->title = $title;
@@ -284,6 +287,9 @@ class CusController extends ApiController
     {
         $values = Yii::app()->request->getPost('CommentExt',[]);
         $obj = new CommentExt;
+        if($obj->getIsNewRecord()&&CommentExt::model()->find("content='".$obj->content."'")) {
+                return $this->returnError('该评论已存在，请勿重复发布');
+            }
         $obj->attributes = $values;
         if(!$obj->save()) {
             $this->returnError(current(current($obj->getErrors())));

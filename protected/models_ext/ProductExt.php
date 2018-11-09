@@ -39,7 +39,8 @@ class ProductExt extends Product{
         'hc'=>['name'=>'耗材','tags'=>['cid'=>'hczl','fid'=>'hcpp','mid'=>'hccz'],'isarea'=>0,'isprice'=>1,'filters'=>['origin'=>['hczl','hcpp','hcprice'],'more'=>['hccz','sort']]],
         'jm'=>['name'=>'加盟','tags'=>['cid'=>'jmzl','fid'=>'jmpp'],'isarea'=>1,'isprice'=>0,'filters'=>['origin'=>['area','jmzl','jmpp'],'more'=>['sort']]],
         'cma'=>['name'=>'CMA合作','tags'=>['cid'=>'cmazl','fid'=>'cmajb'],'isarea'=>1,'isprice'=>0,'filters'=>['origin'=>['area','cmazl','cmajb'],'more'=>['sort']]],
-        'soft'=>['name'=>'软件服务','tags'=>['cid'=>'gwzz'],'isarea'=>0,'isprice'=>1,'filters'=>['origin'=>[],'more'=>[]]]
+        'soft'=>['name'=>'软件服务','tags'=>['cid'=>'gwzz'],'isarea'=>0,'isprice'=>1,'filters'=>['origin'=>[],'more'=>[]]],
+        'bx'=>['name'=>'保险服务','tags'=>['cid'=>'bxgs','fid'=>'bxxz'],'isarea'=>1,'isprice'=>0,'filters'=>['origin'=>['area','bxgs','bxxz'],'more'=>['sort']]],
     ];
 
     public static $tags = [
