@@ -214,6 +214,7 @@ class CusController extends ApiController
     		$obj->title = $title;
     		$obj->content = $content;
     		$obj->image = $fm;
+            $obj->type = 1;
     		if($obj->save()) {
     			Yii::app()->db->createCommand("delete from album where pid=".$obj->id." and type=2")->execute();
                 // AlbumExt::model()->deteleAllByAttributes(['pid'=>$arrs['id'],'type'=>1]);
