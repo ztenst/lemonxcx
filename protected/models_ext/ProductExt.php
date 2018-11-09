@@ -116,10 +116,24 @@ class ProductExt extends Product{
     }
 
     public function beforeValidate() {
-        if($this->getIsNewRecord())
+        if($this->getIsNewRecord()){
+            if($this->status==0) {
+                if($tel = SiteExt::getAttr('qjpz','notice'))
+                    SmsExt::sendMsg('新增商品',$tel,['product'=>$this->name]);
+            }
             $this->created = $this->updated = time();
-        else
+        }
+        else {
+            if($this->status==0 && Yii::app()->db->createCommand("select status from product where id=".$this->id)->queryScalar()==1) {
+                if($tel = SiteExt::getAttr('qjpz','notice'))
+                    SmsExt::sendMsg('新增商品',$tel,['product'=>$this->name]);
+            }
+            if($this->status==1 && Yii::app()->db->createCommand("select status from product where id=".$this->id)->queryScalar()==0) {
+                if($tel = $this->phone)
+                    SmsExt::sendMsg('商品审核通过',$tel,['product'=>$this->name]);
+            }
             $this->updated = time();
+        }
         return parent::beforeValidate();
     }
 

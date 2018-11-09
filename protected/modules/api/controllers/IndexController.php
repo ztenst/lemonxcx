@@ -37,7 +37,7 @@ class IndexController extends ApiController
 
                 $data['cates'][] = [
                     'id'=>$value->id,
-                    'py'=>$value->name=='论坛'||$value->name=='行业新闻'?'luntan':$aats[$value->name],
+                    'py'=>$value->name=='论坛'?'luntan':($value->name=='行业新闻'?'xinwen':$aats[$value->name]),
                     'name'=>$value->name,
                     'img'=>ImageTools::fixImage($value->icon,200,200),
                 ];
@@ -82,11 +82,25 @@ class IndexController extends ApiController
             }
         }
         // 十篇推荐的文章
-        $shs = ArticleExt::model()->findAll(['condition'=>'type=1 and status=1','limit'=>10,'order'=>'sort desc,updated desc']);
+        $shs = ArticleExt::model()->findAll(['condition'=>'type=1 and status=1','limit'=>6,'order'=>'sort desc,updated desc']);
         if($shs) {
             foreach ($shs as $key => $value) {
                 // $obj = $value->getObj();
                 $data['news'][] = [
+                    'id'=>$value->id,
+                    'title'=>$value->title,
+                    'author'=>$value->user?$value->user->name:'佚名',
+                    'hits'=>$value->hits,
+                    // 'name'=>$value->name,//750
+                    'img'=>ImageTools::fixImage($value->image,750,260),
+                ];
+            }
+        }
+        $shs = ArticleExt::model()->findAll(['condition'=>'type=0 and status=1','limit'=>6,'order'=>'sort desc,updated desc']);
+        if($shs) {
+            foreach ($shs as $key => $value) {
+                // $obj = $value->getObj();
+                $data['tzs'][] = [
                     'id'=>$value->id,
                     'title'=>$value->title,
                     'author'=>$value->user?$value->user->name:'佚名',
@@ -253,5 +267,10 @@ class IndexController extends ApiController
         }
         $user->attributes = $arr;
         $user->save();
+    }
+
+    public function actionGetSm()
+    {
+        $this->frame['data'] = SiteExt::getAttr('qjpz','shengming');
     }
 }

@@ -35,7 +35,7 @@ $this->breadcrumbs = array($this->pageTitle);
         <tr>
             <td style="text-align:center;vertical-align: middle"><?php echo $v->id; ?></td>
             <td class="text-center"><?=$v->user?$v->user->name:''?></td>
-            <td class="text-center"><?=$v->article?$v->article->title:''?></td> 
+            <td class="text-center"><?=$v->comment?$v->comment->news->title:''?></td> 
             <td class="text-center"><?=date('Y-m-d H:i:s',$v->created)?></td>
             <!-- <td class="text-center"><?=date('Y-m-d',$v->updated)?></td> -->
 
