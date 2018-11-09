@@ -21,7 +21,7 @@ class ImageTools extends CComponent
 		if(!strstr($res, 'imageslim')) {
 			$res .= strstr($res, '?')?'|imageslim':'?imageslim';
 		}
-		return self::waterMark($res);
+		return $res;
 	}
 
 	/**
