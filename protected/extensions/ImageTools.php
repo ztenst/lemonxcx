@@ -17,7 +17,11 @@ class ImageTools extends CComponent
 	public static function fixImage($value, $width=0, $height=0, $mode=1)
 	{
 		if(strpos($value, 'http')!==false && strpos($value, 'hualongxiang')===false || empty($value)) return $value;
-		return (strpos($value, 'http')===false && Yii::app()->file->enableCloudStorage) ? self::qiniuImage($value, $width, $height, $mode) : self::localImage($value, $width, $height);
+		$res = (strpos($value, 'http')===false && Yii::app()->file->enableCloudStorage) ? self::qiniuImage($value, $width, $height, $mode) : self::localImage($value, $width, $height);
+		if(!strstr($res, 'imageslim')) {
+			$res .= strstr($res, '?')?'|imageslim':'?imageslim';
+		}
+		return self::waterMark($res);
 	}
 
 	/**
