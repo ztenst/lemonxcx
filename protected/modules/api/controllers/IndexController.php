@@ -137,6 +137,7 @@ class IndexController extends ApiController
                             'phone'=>$user->phone,
                             'name'=>$user->name,
                             'openid'=>$openid,
+                            'session_key'=>$cont['session_key'],
                         ];
                         echo json_encode($data);
                     } else {
