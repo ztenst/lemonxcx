@@ -375,13 +375,14 @@ class ProductController extends ApiController
     	unset($arrs['images']);
     	if(isset($arrs['id'])&&$arrs['id']) {
     		if($title = $arrs['title']) {
-    			if(Yii::app()-db->createCommand("select id from product where title='$title' and id!=".$arrs['id'])->queryScalar()){
+    			if(Yii::app()->db->createCommand("select id from product where title='$title' and id!=".$arrs['id'])->queryScalar()){
     				return $this->returnError("已有该商品名，请勿重复");
     			}
     		}
     		$obj = ProductExt::model()->findByPk($arrs['id']);
     	} else {
-    		if(Yii::app()-db->createCommand("select id from product where title='$title'")->queryScalar()){
+    		if($title = $arrs['title']) 
+    		if(Yii::app()->db->createCommand("select id from product where title='$title'")->queryScalar()){
     				return $this->returnError("已有该商品名，请勿重复");
     			}
     		$obj = new ProductExt;
