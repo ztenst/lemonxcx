@@ -16,6 +16,7 @@ class ProductController extends ApiController
 		$save = (int)Yii::app()->request->getQuery('save',0);
 		$savetype = (int)Yii::app()->request->getQuery('savetype',0);
 		$order = (int)Yii::app()->request->getQuery('order',0);
+		$rz = (int)Yii::app()->request->getQuery('rz','');
 		$page = (int)Yii::app()->request->getQuery('page',1);
 		$limit = (int)Yii::app()->request->getQuery('limit',20);
 		$status = Yii::app()->request->getQuery('status',1);
@@ -63,6 +64,9 @@ class ProductController extends ApiController
 		}
 		if(is_numeric($status)) {
 			$criteria->addCondition('status='.$status);
+		}
+		if($rz) {
+			$criteria->addCondition('is_rz='.$rz);
 		}
 		$ress = ProductExt::model()->getList($criteria,$limit);
 		$infos = $ress->data;

@@ -163,6 +163,15 @@ class TagController extends ApiController{
     				}
     			}
     		}
+    		$more[] = [
+				'name'=>'认证',
+				'filed'=>'rz',
+				'list'=>[
+					['id'=>1,'name'=>'认证商品'],
+					// ['id'=>2,'name'=>'全部商品'],
+					// ['id'=>1,'name'=>'价格从低到高'],
+				],
+			];
     		foreach ($fils['more'] as $o) {
     			if($o=='sort') {
     				$more[] = [
@@ -183,6 +192,7 @@ class TagController extends ApiController{
 		    				'list'=>Yii::app()->db->createCommand("select id,name from tag where cate='$o' and status=1")->queryAll(),
     				];
     			}
+    			
     		}
     		$data['tags'][] = [
     			'is_show'=>1,
