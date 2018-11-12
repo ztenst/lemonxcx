@@ -8,7 +8,7 @@ class CusController extends ApiController
 		$page = (int)Yii::app()->request->getQuery('page',1);
 		$limit = (int)Yii::app()->request->getQuery('limit',20);
         $uid = (int)Yii::app()->request->getQuery('uid',0);
-        $type = (int)Yii::app()->request->getQuery('type',0);
+        $type = Yii::app()->request->getQuery('type','');
         $save = (int)Yii::app()->request->getQuery('save',0);
         $savetype = (int)Yii::app()->request->getQuery('savetype',0);
 		$kw = $this->cleanXss(Yii::app()->request->getQuery('kw',''));
@@ -30,7 +30,7 @@ class CusController extends ApiController
             $criteria->addCondition("t.uid=:uid");
             $criteria->params[':uid'] = $uid;
         }
-        if($type) {
+        if(is_numeric($type)) {
             $criteria->addCondition("type=:type");
             $criteria->params[':type'] = $type;
         }
