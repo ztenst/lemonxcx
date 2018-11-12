@@ -158,6 +158,7 @@ class IndexController extends ApiController
     {
         $data['openid'] = Yii::app()->request->getPost('openid','');
         $data['name'] = Yii::app()->request->getPost('name','');
+        $data['phone'] = Yii::app()->request->getPost('phone','');
         $data['sex'] = Yii::app()->request->getPost('sex','');
         $data['pro'] = Yii::app()->request->getPost('pro','');
         $data['city'] = Yii::app()->request->getPost('city','');
