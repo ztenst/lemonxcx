@@ -274,4 +274,17 @@ class IndexController extends ApiController
     {
         $this->frame['data'] = SiteExt::getAttr('qjpz','shengming');
     }
+
+    public function actionSetPhone($uid='',$phone='')
+    {
+        if(!$phone||!$uid) {
+            return $this->returnError('参数错误');
+        }
+        $user = UserExt::model()->findByPk($uid);
+        if(!$user) {
+            return $this->returnError('用户不存在');
+        }
+        $user->phone = $phone;
+        $user->save();
+    }
 }
