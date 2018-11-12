@@ -254,12 +254,16 @@ class CusController extends ApiController
         $obj->pid = $pid;
         $obj->type = $type;
         $pro = ProductExt::model()->findByPk($pid);
+        $user = ProductExt::model()->findByPk($uid);
         $phone = $pro->phone;
-        if($type==2) {
-            // 每小时不超过5次
-            $num = SmsExt::model()->count("pid=$pid and code='SMS_150742583' and ")
-            if()
-        }
+        $time = time()-3600;
+        // if($type==2) {
+        //     // 每小时不超过3次
+        //     $num = LogExt::model()->count("pid=$pid and uid=$uid and created>$time and type=2");
+        //     if($num<3) {
+        //         SmsExt::sendMsg('购买通知卖家',$phone,['user'=>$user->name.$user->phone,]);
+        //     }
+        // }
         $obj->save();
         $this->returnSuccess('操作成功');
     }
