@@ -34,8 +34,8 @@ class AliMsg
     public function __construct()
     {
 
-        $accessKeyId = 'LTAIFkPYjvzZziLB';
-        $accessKeySecret = '7CHZPrIr31QIlEh27yHfNS7qCoukoF';
+        $accessKeyId = 'LTAIvMJ5lKAoIXKZ';
+        $accessKeySecret = 'z6roAtGJONl8Y8IfbM5arompQMDNPT';
         // 短信API产品名
         $product = "Dysmsapi";
 
@@ -84,7 +84,7 @@ class AliMsg
         $request->setPhoneNumbers($phoneNumbers);
 
         // 必填，设置签名名称
-        $request->setSignName('经纪圈');
+        $request->setSignName('空气净化大师');
 
         // 必填，设置模板CODE
         $request->setTemplateCode($templateCode);

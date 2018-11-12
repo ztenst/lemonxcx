@@ -9,8 +9,8 @@ class UserExt extends User{
      * @var array 状态
      */
     static $status = array(
-        0 => '禁用',
-        1 => '启用',
+        0 => '未认证',
+        1 => '已认证',
         2 => '回收站',
     );
     /**

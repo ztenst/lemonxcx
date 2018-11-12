@@ -38,7 +38,9 @@ class TagExt extends Tag
             'jmpp'=>'加盟品牌',
             'cmazl'=>'CMA合作种类',
             'cmajb'=>'CMA合作级别',
-            'gwzz'=>'软件服务类型'
+            'gwzz'=>'软件服务类型',
+            'bxgs'=>'保险公司',
+            'bxxz'=>'保险险种',
 
         ],
         //区间式标签，区间式标签可以增删

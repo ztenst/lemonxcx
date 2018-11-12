@@ -33,7 +33,7 @@ $this->breadcrumbs = array($this->pageTitle);
         <th class="text-center">用户名</th>
         <th class="text-center">手机号</th>
          <th class="text-center">openid</th>
-        <th class="text-center">意向产品</th>
+        <th class="text-center">公司名</th>
         <th class="text-center">添加时间</th>
         <th class="text-center">修改时间</th>
         <th class="text-center">状态</th>
@@ -49,7 +49,7 @@ $this->breadcrumbs = array($this->pageTitle);
             <td class="text-center"><?=$v->name?></td>
             <td class="text-center"><?=$v->phone?></td>
             <td class="text-center"><?=$v->openid?></td>
-            <td class="text-center"><?=$v->product?($v->product->name):''?></td>         
+            <td class="text-center"><?=$v->company?></td>         
             <td class="text-center"><?=date('Y-m-d H:i:s',$v->created)?></td>
             <td class="text-center"><?=date('Y-m-d H:i:s',$v->updated)?></td>
             <td class="text-center"><?php echo CHtml::ajaxLink(UserExt::$status[$v->status],$this->createUrl('changeStatus'), array('type'=>'get', 'data'=>array('id'=>$v->id,'class'=>get_class($v)),'success'=>'function(data){location.reload()}'), array('class'=>'btn btn-sm '.UserExt::$statusStyle[$v->status])); ?></td>

@@ -37,7 +37,7 @@ class IndexController extends ApiController
 
                 $data['cates'][] = [
                     'id'=>$value->id,
-                    'py'=>$value->name=='论坛'||$value->name=='行业新闻'?'luntan':$aats[$value->name],
+                    'py'=>$value->name=='论坛'?'luntan':($value->name=='行业新闻'?'xinwen':$aats[$value->name]),
                     'name'=>$value->name,
                     'img'=>ImageTools::fixImage($value->icon,200,200),
                 ];
@@ -82,11 +82,25 @@ class IndexController extends ApiController
             }
         }
         // 十篇推荐的文章
-        $shs = ArticleExt::model()->findAll(['condition'=>'type=1 and status=1','limit'=>10,'order'=>'sort desc,updated desc']);
+        $shs = ArticleExt::model()->findAll(['condition'=>'type=1 and status=1','limit'=>6,'order'=>'sort desc,updated desc']);
         if($shs) {
             foreach ($shs as $key => $value) {
                 // $obj = $value->getObj();
                 $data['news'][] = [
+                    'id'=>$value->id,
+                    'title'=>$value->title,
+                    'author'=>$value->user?$value->user->name:'佚名',
+                    'hits'=>$value->hits,
+                    // 'name'=>$value->name,//750
+                    'img'=>ImageTools::fixImage($value->image,750,260),
+                ];
+            }
+        }
+        $shs = ArticleExt::model()->findAll(['condition'=>'type=0 and status=1','limit'=>6,'order'=>'sort desc,updated desc']);
+        if($shs) {
+            foreach ($shs as $key => $value) {
+                // $obj = $value->getObj();
+                $data['tzs'][] = [
                     'id'=>$value->id,
                     'title'=>$value->title,
                     'author'=>$value->user?$value->user->name:'佚名',
@@ -123,6 +137,7 @@ class IndexController extends ApiController
                             'phone'=>$user->phone,
                             'name'=>$user->name,
                             'openid'=>$openid,
+                            'session_key'=>$cont['session_key'],
                         ];
                         echo json_encode($data);
                     } else {
@@ -144,6 +159,7 @@ class IndexController extends ApiController
     {
         $data['openid'] = Yii::app()->request->getPost('openid','');
         $data['name'] = Yii::app()->request->getPost('name','');
+        $data['phone'] = Yii::app()->request->getPost('phone','');
         $data['sex'] = Yii::app()->request->getPost('sex','');
         $data['pro'] = Yii::app()->request->getPost('pro','');
         $data['city'] = Yii::app()->request->getPost('city','');
@@ -252,6 +268,24 @@ class IndexController extends ApiController
             return $this->returnError('用户不存在');
         }
         $user->attributes = $arr;
+        $user->save();
+    }
+
+    public function actionGetSm()
+    {
+        $this->frame['data'] = SiteExt::getAttr('qjpz','shengming');
+    }
+
+    public function actionSetPhone($uid='',$phone='')
+    {
+        if(!$phone||!$uid) {
+            return $this->returnError('参数错误');
+        }
+        $user = UserExt::model()->findByPk($uid);
+        if(!$user) {
+            return $this->returnError('用户不存在');
+        }
+        $user->phone = $phone;
         $user->save();
     }
 }

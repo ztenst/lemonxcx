@@ -47,6 +47,7 @@ class ProductController extends AdminController{
 			$criteria->addCondition('tid=:cid');
 			$criteria->params[':cid'] = $cate1;
 		}
+		$criteria->order = "sort desc,updated desc";
 		$infos = $modelName::model()->undeleted()->getList($criteria,20);
 		$this->render('list',['cate'=>$cate,'cate1'=>$cate1,'infos'=>$infos->data,'cates'=>ProductExt::$status,'cates1'=>$this->cates1,'pager'=>$infos->pagination,'type' => $type,'value' => $value,'time' => $time,'time_type' => $time_type,]);
 	}
@@ -126,6 +127,14 @@ class ProductController extends AdminController{
 	{
 		$obj = ProductExt::model()->findByPk($id);
 		$obj->status = $kw;
+		$obj->save();
+		$this->setMessage('操作成功');
+	}
+
+	public function actionAjaxSort($id='',$sort='')
+	{
+		$obj = ProductExt::model()->findByPk($id);
+		$obj->sort = $sort;
 		$obj->save();
 		$this->setMessage('操作成功');
 	}

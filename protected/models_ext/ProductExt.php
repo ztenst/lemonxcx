@@ -39,7 +39,8 @@ class ProductExt extends Product{
         'hc'=>['name'=>'耗材','tags'=>['cid'=>'hczl','fid'=>'hcpp','mid'=>'hccz'],'isarea'=>0,'isprice'=>1,'filters'=>['origin'=>['hczl','hcpp','hcprice'],'more'=>['hccz','sort']]],
         'jm'=>['name'=>'加盟','tags'=>['cid'=>'jmzl','fid'=>'jmpp'],'isarea'=>1,'isprice'=>0,'filters'=>['origin'=>['area','jmzl','jmpp'],'more'=>['sort']]],
         'cma'=>['name'=>'CMA合作','tags'=>['cid'=>'cmazl','fid'=>'cmajb'],'isarea'=>1,'isprice'=>0,'filters'=>['origin'=>['area','cmazl','cmajb'],'more'=>['sort']]],
-        'soft'=>['name'=>'软件服务','tags'=>['cid'=>'gwzz'],'isarea'=>0,'isprice'=>1,'filters'=>['origin'=>[],'more'=>[]]]
+        'soft'=>['name'=>'软件服务','tags'=>['cid'=>'gwzz'],'isarea'=>0,'isprice'=>1,'filters'=>['origin'=>[],'more'=>[]]],
+        'bx'=>['name'=>'保险服务','tags'=>['cid'=>'bxgs','fid'=>'bxxz'],'isarea'=>1,'isprice'=>0,'filters'=>['origin'=>['area','bxgs','bxxz'],'more'=>['sort']]],
     ];
 
     public static $tags = [
@@ -116,10 +117,24 @@ class ProductExt extends Product{
     }
 
     public function beforeValidate() {
-        if($this->getIsNewRecord())
+        if($this->getIsNewRecord()){
+            if($this->status==0) {
+                if($tel = SiteExt::getAttr('qjpz','notice'))
+                    SmsExt::sendMsg('新增商品',$tel,['product'=>$this->name]);
+            }
             $this->created = $this->updated = time();
-        else
+        }
+        else {
+            if($this->status==0 && Yii::app()->db->createCommand("select status from product where id=".$this->id)->queryScalar()==1) {
+                if($tel = SiteExt::getAttr('qjpz','notice'))
+                    SmsExt::sendMsg('新增商品',$tel,['product'=>$this->name]);
+            }
+            if($this->status==1 && Yii::app()->db->createCommand("select status from product where id=".$this->id)->queryScalar()==0) {
+                if($tel = $this->phone)
+                    SmsExt::sendMsg('商品审核通过',$tel,['product'=>$this->name]);
+            }
             $this->updated = time();
+        }
         return parent::beforeValidate();
     }
 

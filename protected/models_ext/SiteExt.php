@@ -26,6 +26,7 @@ class SiteExt extends Site{
         'rzwords'=>'',
         'shengming'=>'',
         'usernopic'=>'',
+        'notice'=>''
     ];
     public static $cateName = [
         'qjpz' => '全局配置',
@@ -45,6 +46,7 @@ class SiteExt extends Site{
             'mch_key'=>['type'=>'text','name'=>'商户支付key'],
             'rzwords'=>['type'=>'text','name'=>'认证文字'],
             'tel'=>['type'=>'text','name'=>'站点电话'],
+            'notice'=>['type'=>'text','name'=>'通知电话'],
             'qq'=>['type'=>'text','name'=>'站点qq'],
             'addr'=>['type'=>'text','name'=>'地址'],
             'boss_name'=>['type'=>'text','name'=>'老板名字'],
@@ -52,7 +54,7 @@ class SiteExt extends Site{
             'sitecolor'=>['type'=>'text','name'=>'站点颜色'],
             'sitename'=>['type'=>'text','name'=>'站点名'],
             'shengming'=>['type'=>'text','name'=>'声明'],
-            ],
+                        ],
         'sen'=>[
             'sen'=>['type'=>'text','name'=>'敏感词'],
         ],

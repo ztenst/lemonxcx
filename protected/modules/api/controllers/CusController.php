@@ -8,7 +8,7 @@ class CusController extends ApiController
 		$page = (int)Yii::app()->request->getQuery('page',1);
 		$limit = (int)Yii::app()->request->getQuery('limit',20);
         $uid = (int)Yii::app()->request->getQuery('uid',0);
-        $type = (int)Yii::app()->request->getQuery('type',0);
+        $type = Yii::app()->request->getQuery('type','');
         $save = (int)Yii::app()->request->getQuery('save',0);
         $savetype = (int)Yii::app()->request->getQuery('savetype',0);
 		$kw = $this->cleanXss(Yii::app()->request->getQuery('kw',''));
@@ -16,6 +16,8 @@ class CusController extends ApiController
 		$criteria = new CDbCriteria;
 		$criteria->order = 't.sort desc,t.updated desc';
 		$criteria->limit = $limit;
+        // 这段代码比较恶心 以后万一有bug再说
+        $type==2 && $type = 0;
 		// $criteria->addCondition('t.status=1');
 		if($kw) {
 			$criteria->addSearchCondition('t.title',$kw);
@@ -28,7 +30,7 @@ class CusController extends ApiController
             $criteria->addCondition("t.uid=:uid");
             $criteria->params[':uid'] = $uid;
         }
-        if($type) {
+        if(is_numeric($type)) {
             $criteria->addCondition("type=:type");
             $criteria->params[':type'] = $type;
         }
@@ -115,6 +117,7 @@ class CusController extends ApiController
             'content'=>$info->content,
             'hits'=>$info->hits,
             'imgs'=>$imgs,
+            'cid'=>$info->cid,
             'images'=>$images,
             'is_save'=>SaveExt::model()->find("type=2 and uid=$uid and pid=$id")?1:0,
         ];
@@ -209,6 +212,9 @@ class CusController extends ApiController
     			return $this->returnError('参数错误');
     		}
     		$obj = $id?ArticleExt::model()->findByPk($id):new ArticleExt;
+            if($obj->getIsNewRecord()&&ArticleExt::model()->find("title='$title'")) {
+                return $this->returnError('帖子名已存在，请勿重复发布');
+            }
     		$obj->status = 0;
     		$obj->uid = $uid;
     		$obj->title = $title;
@@ -249,15 +255,26 @@ class CusController extends ApiController
         $obj->uid = $uid;
         $obj->pid = $pid;
         $obj->type = $type;
+        $pro = ProductExt::model()->findByPk($pid);
+        $user = UserExt::model()->findByPk($uid);
+        $phone = $pro->phone;
+        $time = time()-3600;
+        if($type==2) {
+            // 每小时不超过3次
+            $num = LogExt::model()->count("pid=$pid and uid=$uid and created>$time and type=2");
+            if($num<3) {
+                SmsExt::sendMsg('购买通知卖家',$phone,['user'=>$user->name.($user->phone?$user->phone:''),'pro'=>$pro->name]);
+            }
+        }
         $obj->save();
         $this->returnSuccess('操作成功');
     }
     public function actionLogList($uid='',$type='',$utype=1)
     {
         if($utype==1) {
-            $logs = LogExt::model()->findAll("puid=$uid");
+            $logs = LogExt::model()->findAll(['condition'=>"puid=$uid",'order'=>'updated desc','limit'=>50]);
         } else {
-            $logs = LogExt::model()->findAll("uid=$uid");
+            $logs = LogExt::model()->findAll(['condition'=>"uid=$uid",'order'=>'updated desc','limit'=>50]);
         }
         $data = [];
         if($logs) {
@@ -284,6 +301,9 @@ class CusController extends ApiController
     {
         $values = Yii::app()->request->getPost('CommentExt',[]);
         $obj = new CommentExt;
+        if($obj->getIsNewRecord()&&CommentExt::model()->find("content='".$obj->content."'")) {
+                return $this->returnError('该评论已存在，请勿重复发布');
+            }
         $obj->attributes = $values;
         if(!$obj->save()) {
             $this->returnError(current(current($obj->getErrors())));
