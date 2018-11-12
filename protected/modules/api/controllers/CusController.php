@@ -254,7 +254,7 @@ class CusController extends ApiController
         $obj->pid = $pid;
         $obj->type = $type;
         $pro = ProductExt::model()->findByPk($pid);
-        $user = ProductExt::model()->findByPk($uid);
+        $user = UserExt::model()->findByPk($uid);
         $phone = $pro->phone;
         $time = time()-3600;
         if($type==2) {
