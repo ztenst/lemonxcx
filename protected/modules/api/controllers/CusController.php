@@ -257,13 +257,13 @@ class CusController extends ApiController
         $user = ProductExt::model()->findByPk($uid);
         $phone = $pro->phone;
         $time = time()-3600;
-        // if($type==2) {
-        //     // 每小时不超过3次
-        //     $num = LogExt::model()->count("pid=$pid and uid=$uid and created>$time and type=2");
-        //     if($num<3) {
-        //         SmsExt::sendMsg('购买通知卖家',$phone,['user'=>$user->name.$user->phone,]);
-        //     }
-        // }
+        if($type==2) {
+            // 每小时不超过3次
+            $num = LogExt::model()->count("pid=$pid and uid=$uid and created>$time and type=2");
+            if($num<3) {
+                SmsExt::sendMsg('购买通知卖家',$phone,['user'=>$user->name.($user->phone?$user->phone:''),'pro'=>$pro->name]);
+            }
+        }
         $obj->save();
         $this->returnSuccess('操作成功');
     }
