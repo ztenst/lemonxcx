@@ -115,6 +115,7 @@ class CusController extends ApiController
             'content'=>$info->content,
             'hits'=>$info->hits,
             'imgs'=>$imgs,
+            'cid'=>$info->cid,
             'images'=>$images,
             'is_save'=>SaveExt::model()->find("type=2 and uid=$uid and pid=$id")?1:0,
         ];
