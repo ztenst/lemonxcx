@@ -6,6 +6,9 @@
  * The followings are the available columns in table 'sms':
  * @property integer $id
  * @property string $phone
+ * @property integer $type
+ * @property integer $pid
+ * @property integer $uid
  * @property string $code
  * @property integer $created
  * @property integer $updated
@@ -29,12 +32,12 @@ class Sms extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('created', 'required'),
-			array('created, updated', 'numerical', 'integerOnly'=>true),
+			array('type, pid, uid, created, updated', 'numerical', 'integerOnly'=>true),
 			array('phone', 'length', 'max'=>15),
-			array('code', 'length', 'max'=>10),
+			array('code', 'length', 'max'=>100),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, phone, code, created, updated', 'safe', 'on'=>'search'),
+			array('id, phone, type, pid, uid, code, created, updated', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -57,6 +60,9 @@ class Sms extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'phone' => 'Phone',
+			'type' => 'Type',
+			'pid' => 'Pid',
+			'uid' => 'Uid',
 			'code' => 'Code',
 			'created' => 'Created',
 			'updated' => 'Updated',
@@ -83,6 +89,9 @@ class Sms extends CActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('phone',$this->phone,true);
+		$criteria->compare('type',$this->type);
+		$criteria->compare('pid',$this->pid);
+		$criteria->compare('uid',$this->uid);
 		$criteria->compare('code',$this->code,true);
 		$criteria->compare('created',$this->created);
 		$criteria->compare('updated',$this->updated);
