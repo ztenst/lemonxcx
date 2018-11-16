@@ -17,7 +17,6 @@ class CusController extends ApiController
 		$criteria->order = 't.sort desc,t.updated desc';
 		$criteria->limit = $limit;
         // 这段代码比较恶心 以后万一有bug再说
-        $type==2 && $type = 0;
 		// $criteria->addCondition('t.status=1');
 		if($kw) {
 			$criteria->addSearchCondition('t.title',$kw);
@@ -220,7 +219,7 @@ class CusController extends ApiController
     		$obj->title = $title;
     		$obj->content = $content;
     		$obj->image = $fm;
-            $obj->type = 1;
+            $obj->type = 2;
     		if($obj->save()) {
     			Yii::app()->db->createCommand("delete from album where pid=".$obj->id." and type=2")->execute();
                 // AlbumExt::model()->deteleAllByAttributes(['pid'=>$arrs['id'],'type'=>1]);

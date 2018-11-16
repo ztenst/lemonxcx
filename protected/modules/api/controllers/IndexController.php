@@ -96,7 +96,7 @@ class IndexController extends ApiController
                 ];
             }
         }
-        $shs = ArticleExt::model()->findAll(['condition'=>'type=0 and status=1','limit'=>6,'order'=>'sort desc,updated desc']);
+        $shs = ArticleExt::model()->findAll(['condition'=>'type=2 and status=1','limit'=>6,'order'=>'sort desc,updated desc']);
         if($shs) {
             foreach ($shs as $key => $value) {
                 // $obj = $value->getObj();

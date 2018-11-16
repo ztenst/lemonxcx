@@ -38,7 +38,7 @@ $this->breadcrumbs = array('资讯管理', $this->pageTitle);
 <div class="form-group">
     <label class="col-md-2 control-label">板块</label>
     <div class="col-md-4">
-        <?php echo $form->dropDownList($article, 'type', Yii::app()->params['newstype'], array('class' => 'form-control', 'encode' => false,'empty'=>'请选择')); ?>
+        <?php echo $form->dropDownList($article, 'type', Yii::app()->params['newstype'], array('class' => 'form-control', 'encode' => false)); ?>
     </div>
     <div class="col-md-2"><?php echo $form->error($article, 'type') ?></div>
 </div>
