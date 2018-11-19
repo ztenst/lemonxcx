@@ -26,7 +26,7 @@ class IndexController extends ApiController
             }
         }
         // 分类图
-        $tags = TagExt::model()->normal()->findAll(['condition'=>"cate='tab'"]);
+        $tags = TagExt::model()->normal()->findAll(['condition'=>"cate='tab'",'order'=>'sort asc']);
         if($tags) {
             $aat = ProductExt::$types;
             $aats = [];
