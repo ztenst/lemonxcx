@@ -344,12 +344,15 @@ class ProductController extends ApiController
         foreach ($aat as $key => $value) {
             $aats[$value['name']] = $key;
         }
+        $pyarr = ['yj'=>'i1','pq'=>'i2','hxt'=>'i3','jhq'=>'i4','jsq'=>'i5','jcsb'=>'i6','hc'=>'i7','cma'=>'i8','soft'=>'i9','jm'=>'i10','bx'=>'i11',];
     	$tags = TagExt::model()->normal()->findAll(['condition'=>"cate='tab'",'order'=>'sort asc']);
     	foreach ($tags as $key => $value) {
     		if(!isset($aats[$value->name]))
     			continue;
+    		if(!isset($pyarr[$aats[$value->name]]))
+    			continue;
     		$arr[] = [
-    			'name'=>$value->name,'py'=>$aats[$value->name],
+    			'name'=>$value->name,'py'=>$aats[$value->name],'i'=>$pyarr[$aats[$value->name]]
     		];
     	}
     	// $arr = array_combine(array_values(CHtml::listData($tags,'id','name')),array_values(CHtml::listData($tags,'id','cate')));
