@@ -39,9 +39,10 @@ class TagExt extends Tag
             'jmpp'=>'加盟品牌',
             'cmazl'=>'CMA合作种类',
             'cmajb'=>'CMA合作级别',
-            'gwzz'=>'软件服务类型',
+            'gwzz'=>'软件种类',
             'bxgs'=>'保险公司',
             'bxxz'=>'保险险种',
+            'rjlx'=>'开发类型',
 
         ],
         //区间式标签，区间式标签可以增删
@@ -53,6 +54,7 @@ class TagExt extends Tag
             'jsqprice' => '净水器价格',
             'jcsbprice' => '检测设备价格',
             'hcprice' => '耗材价格',
+            'rjprice' => '软件价格',
 
         ]
     ];

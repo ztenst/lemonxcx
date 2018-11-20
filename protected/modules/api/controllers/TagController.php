@@ -127,14 +127,15 @@ class TagController extends ApiController{
     	$origin_tags = ProductExt::$types;
     	$tag_names = TagExt::$xinfangCate;
     	foreach ($origin_tags as $key => $value) {
-    		if($key=='soft') {
-    			$data['tags'][] = [
-    				'is_show'=>0,
-    				'name'=>$value['name'],
-    				'py'=>$key,
-    			];
-    			continue;
-    		}
+    		// if($key=='soft') {
+    		// 	$data['tags'][] = [
+    		// 		'is_show'=>0,
+    		// 		'name'=>$value['name'],
+    		// 		'py'=>$key,
+    		// 		'filters'=>[],
+    		// 	];
+    		// 	continue;
+    		// }
     		$fils = $value['filters'];
     		$tags = $value['tags'];
     		$antitags = array_flip($tags);

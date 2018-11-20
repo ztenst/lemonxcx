@@ -338,16 +338,22 @@ class ProductController extends ApiController
 
     public function actionGetTagArr()
     {
-    	$this->frame['data'] = ['药剂'=>'yj',
-'喷枪'=>'pq',
-'活性炭'=>'hxt',
-'净化器'=>'jhq',
-'净水器'=>'jsq',
-'检测设备'=>'jcsb',
-'耗材'=>'hc',
-'加盟'=>'jm',
-'CMA合作'=>'cma',
-'软件服务'=>'soft',];
+    	$aat = ProductExt::$types;
+        $aats = [];
+        $arr = [];
+        foreach ($aat as $key => $value) {
+            $aats[$value['name']] = $key;
+        }
+    	$tags = TagExt::model()->normal()->findAll(['condition'=>"cate='tab'",'order'=>'sort asc']);
+    	foreach ($tags as $key => $value) {
+    		if(!isset($aats[$value->name]))
+    			continue;
+    		$arr[] = [
+    			'name'=>$value->name,'py'=>$aats[$value->name],
+    		];
+    	}
+    	// $arr = array_combine(array_values(CHtml::listData($tags,'id','name')),array_values(CHtml::listData($tags,'id','cate')));
+    	$this->frame['data'] = $arr;
     }
 
     public function actionGetProTag($type='')
