@@ -89,6 +89,18 @@ class CusController extends ApiController
         $this->frame['data'] = $data;
     }
 
+    public function actionNewsTagsNews()
+    {
+        $data = [];
+        $tags = TagExt::model()->findAll("cate='xwbq'");
+        if($tags) {
+            foreach ($tags as $key => $value) {
+                $data[] = ['id'=>$value->id,'name'=>$value->name];
+            }
+        }
+        $this->frame['data'] = $data;
+    }
+
 	public function actionInfo($id='',$uid='0')
 	{
         $data = $data['comments'] = [];

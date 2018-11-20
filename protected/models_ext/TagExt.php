@@ -14,8 +14,9 @@ class TagExt extends Tag
         //直接式标签
         'direct' => [
             'tab' => 'tab分类',
-            'wzlm' => '文章栏目',
-            'wzbq' => '文章标签',
+            // 'wzlm' => '文章栏目',
+            'wzbq' => '论坛栏目',
+            'xwbq' => '新闻栏目',
             // 'pcate' => '产品类别',
             'yjzl'=>'药剂种类',
             'yjgn'=>'药剂功能',
