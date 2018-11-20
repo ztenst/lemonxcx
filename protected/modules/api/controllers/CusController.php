@@ -21,10 +21,16 @@ class CusController extends ApiController
 		if($kw) {
 			$criteria->addSearchCondition('t.title',$kw);
 		}
-		if($cid) {
-			$criteria->addCondition("t.cid=:cid");
-			$criteria->params[':cid'] = $cid;
-		}
+        if($type==1) {
+            if($cid) {
+                $criteria->addCondition("t.cidn=:cidn");
+                $criteria->params[':cidn'] = $cid;
+            }
+        } else
+    		if($cid) {
+    			$criteria->addCondition("t.cid=:cid");
+    			$criteria->params[':cid'] = $cid;
+    		}
         if($uid&&!$save) {
             $criteria->addCondition("t.uid=:uid");
             $criteria->params[':uid'] = $uid;
