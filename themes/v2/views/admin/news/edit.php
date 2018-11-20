@@ -52,7 +52,7 @@ $this->breadcrumbs = array('资讯管理', $this->pageTitle);
 <div class="form-group">
     <label class="col-md-2 control-label">新闻标签</label>
     <div class="col-md-4">
-        <?php echo $form->dropDownList($article, 'cidn', $cates, array('class' => 'form-control', 'encode' => false,'empty'=>'请选择')); ?>
+        <?php echo $form->dropDownList($article, 'cidn', CHtml::listData(TagExt::model()->normal()->findAll("cate='xwbq'")), array('class' => 'form-control', 'encode' => false,'empty'=>'请选择')); ?>
     </div>
     <div class="col-md-2"><?php echo $form->error($article, 'cidn') ?></div>
 </div>
