@@ -61,7 +61,7 @@ $this->breadcrumbs = array($this->pageTitle);
                 </div>
             </div>
             <div class="portlet-body">
-                <?php foreach(TagExt::$xinfangCate['range'] as $catePinyin=>$cateName):  ?>
+                <?php foreach(TagExt::$xinfangCate['rangeN'] as $catePinyin=>$cateName):  ?>
                 <div class="portlet light bordered">
                     <div class="portlet-title">
                         <div class="caption font-blue-hoki">

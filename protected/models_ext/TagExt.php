@@ -22,6 +22,52 @@ class TagExt extends Tag
             'yjgn'=>'药剂功能',
             'yjcl'=>'药剂材料',
             'pqkj'=>'喷枪口径',
+            'hxtyl'=>'原料',
+            'hxtgn'=>'功能',
+            'jhqcadr'=>'CADR值',
+            'jhqgn'=>'功能',
+            'jhqjyzb'=>'静音指标',
+            'jhqccm'=>'净化器CCM',
+            'jsqglcj'=>'过滤层级',
+            'jsqglcz'=>'过滤材质',
+            'jcsblx'=>'类型',
+            'jcsbpp'=>'品牌',
+            'hcpp'=>'耗材品牌',
+            'hczl'=>'耗材种类',
+            'hccz'=>'耗材材质',
+            'jmzl'=>'加盟种类',
+            'jmpp'=>'加盟品牌',
+            'cmazl'=>'合作种类',
+            'cmajb'=>'合作级别',
+            'gwzz'=>'软件种类',
+            'bxgs'=>'保险公司',
+            'bxxz'=>'保险险种',
+            'rjlx'=>'开发类型',
+
+        ],
+        //区间式标签，区间式标签可以增删
+        'range' => [
+            'yjprice' => '药剂价格',
+            'pqprice' => '喷枪价格',
+            'hxtprice' => '价格',
+            'jhqprice' => '价格',
+            'jsqprice' => '价格',
+            'jcsbprice' => '价格',
+            'hcprice' => '耗材价格',
+            'rjprice' => '软件价格',
+
+        ],
+        //直接式标签
+        'directN' => [
+            'tab' => 'tab分类',
+            // 'wzlm' => '文章栏目',
+            'wzbq' => '论坛栏目',
+            'xwbq' => '新闻栏目',
+            // 'pcate' => '产品类别',
+            'yjzl'=>'药剂种类',
+            'yjgn'=>'药剂功能',
+            'yjcl'=>'药剂材料',
+            'pqkj'=>'喷枪口径',
             'hxtyl'=>'活性炭原料',
             'hxtgn'=>'活性炭功能',
             'jhqcadr'=>'CADR值',
@@ -46,7 +92,7 @@ class TagExt extends Tag
 
         ],
         //区间式标签，区间式标签可以增删
-        'range' => [
+        'rangeN' => [
             'yjprice' => '药剂价格',
             'pqprice' => '喷枪价格',
             'hxtprice' => '活性炭价格',
@@ -332,6 +378,6 @@ class TagExt extends Tag
     public static function getAllDirCates()
     {
 
-        return Yii::app()->file->getFields()?TagExt::$xinfangCate['direct']+Yii::app()->file->getFields():TagExt::$xinfangCate['direct'];
+        return Yii::app()->file->getFields()?TagExt::$xinfangCate['directN']+Yii::app()->file->getFields():TagExt::$xinfangCate['directN'];
     }
 }
