@@ -20,10 +20,20 @@ class ProductController extends ApiController
 		$page = (int)Yii::app()->request->getQuery('page',1);
 		$limit = (int)Yii::app()->request->getQuery('limit',20);
 		$status = Yii::app()->request->getQuery('status',1);
+		$sort = Yii::app()->request->getQuery('sort',0);
 		$kw = $this->cleanXss(Yii::app()->request->getQuery('kw',''));
 		!$page && $page = 1;
 		$criteria = new CDbCriteria;
-		$criteria->order = 'sort desc,updated desc';
+		if(!$sort) {
+			$criteria->order = 'sort desc,updated desc';
+		} elseif ($sort==1) {
+			$criteria->order = 'price asc,sort desc,updated desc';
+		} elseif ($sort==2) {
+			$criteria->order = 'price desc,sort desc,updated desc';
+		} elseif ($sort==3) {
+			$criteria->order = 'created desc,sort desc,updated desc';
+		}
+		
 		$criteria->limit = $limit;
 		if($kw) {
 			$criteria->addSearchCondition('name',$kw);
