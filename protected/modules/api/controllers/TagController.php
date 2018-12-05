@@ -144,7 +144,7 @@ class TagController extends ApiController{
     		foreach ($fils['origin'] as $o) {
     			if($o=='area') {
     				$origin[] = [
-	    				'name'=>$key=='jm'||$key=='cma'?'地区':'产地',
+	    				'name'=>$key=='jm'||$key=='cma'||$key=='bx'?'地区':'产地',
 	    				'filed'=>'area',
 	    				'list'=>$areas
 	    			];
