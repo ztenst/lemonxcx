@@ -54,7 +54,7 @@ class TagExt extends Tag
             'jhqprice' => '价格',
             'jsqprice' => '价格',
             'jcsbprice' => '价格',
-            'hcprice' => '耗材价格',
+            'hcprice' => '价格',
             'rjprice' => '软件价格',
 
         ],
