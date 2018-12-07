@@ -59,7 +59,7 @@ class CusController extends ApiController
 			foreach ($infos as $key => $value) {
 				$data['list'][] = [
 					'id'=>$value->id,
-					'name'=>Tools::u8_title_substr($value->title,40),
+					'name'=>Tools::u8_title_substr($value->title,54),
 					// 'cate'=>$value->cate?$value->cate->name:'',
 					'date'=>date('Y-m-d H:i',$value->updated),
 					'author'=>$value->user?$value->user->name:'',
