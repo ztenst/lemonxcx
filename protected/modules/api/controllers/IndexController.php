@@ -61,7 +61,7 @@ class IndexController extends ApiController
                 $data['long_recoms'][] = [
                     'pid'=>$value->getObj()->id,
                     // 'name'=>$value->name,//750
-                    'img'=>ImageTools::fixImage($value->image,750,260),
+                    'img'=>ImageTools::fixImage($value->image),
                 ];
             }
         }
@@ -77,7 +77,7 @@ class IndexController extends ApiController
                     'company'=>$obj->company,
                     'rzwords'=>$obj->is_rz?$rzwords:'',
                     // 'name'=>$value->name,//750
-                    'img'=>ImageTools::fixImage($value->image?$value->image:$obj->image,750,260),
+                    'img'=>ImageTools::fixImage($value->image?$value->image:$obj->image),
                 ];
             }
         }
@@ -92,7 +92,7 @@ class IndexController extends ApiController
                     'author'=>$value->user?$value->user->name:'佚名',
                     'hits'=>$value->hits,
                     // 'name'=>$value->name,//750
-                    'img'=>ImageTools::fixImage($value->image,750,260),
+                    'img'=>ImageTools::fixImage($value->image),
                 ];
             }
         }
@@ -106,7 +106,7 @@ class IndexController extends ApiController
                     'author'=>$value->user?$value->user->name:'佚名',
                     'hits'=>$value->hits,
                     // 'name'=>$value->name,//750
-                    'img'=>ImageTools::fixImage($value->image,750,260),
+                    'img'=>ImageTools::fixImage($value->image),
                 ];
             }
         }
