@@ -24,6 +24,7 @@ class ProductController extends ApiController
 		$kw = $this->cleanXss(Yii::app()->request->getQuery('kw',''));
 		!$page && $page = 1;
 		$criteria = new CDbCriteria;
+		$criteria->addCondition("deleted=0");
 		if(!$sort) {
 			$criteria->order = 'sort desc,updated desc';
 		} elseif ($sort==1) {
