@@ -413,7 +413,7 @@ class ProductController extends ApiController
     	}
     	$obj->attributes = $arrs;
     	$obj->status = 0;
-
+    	$obj->image = str_replace("https", "http", $obj->image);
     	if($obj->save()) {
     		Yii::app()->db->createCommand("delete from album where pid=".$obj->id." and type=1")->execute();
     		// AlbumExt::model()->deteleAllByAttributes(['pid'=>$arrs['id'],'type'=>1]);
@@ -429,7 +429,7 @@ class ProductController extends ApiController
     			foreach ($imgs as $key => $value) {
     				$im = new AlbumExt;
     				$im->pid = $obj->id;
-    				$im->url = $value;
+    				$im->url = str_replace("https", "http", $value);
     				$im->type = 1;
     				$im->save();
     			}
