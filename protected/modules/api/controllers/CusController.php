@@ -324,6 +324,7 @@ class CusController extends ApiController
                 return $this->returnError('该评论已存在，请勿重复发布');
             }
         $obj->attributes = $values;
+        $obj->status = 1;
         if(!$obj->save()) {
             $this->returnError(current(current($obj->getErrors())));
         }
