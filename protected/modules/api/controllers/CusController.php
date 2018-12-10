@@ -16,6 +16,7 @@ class CusController extends ApiController
 		$criteria = new CDbCriteria;
 		$criteria->order = 't.sort desc,t.updated desc';
 		$criteria->limit = $limit;
+        $criteria->addCondition("t.deleted=0");
         // 这段代码比较恶心 以后万一有bug再说
 		// $criteria->addCondition('t.status=1');
 		if($kw) {
