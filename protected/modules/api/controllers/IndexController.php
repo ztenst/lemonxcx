@@ -66,7 +66,7 @@ class IndexController extends ApiController
             }
         }
         // 6个产品
-        $shs = RecomExt::model()->normal()->findAll(['condition'=>'cid=3','limit'=>6]);
+        $shs = RecomExt::model()->normal()->findAll(['condition'=>'cid=3 and deleted=0','limit'=>6]);
         if($shs) {
             foreach ($shs as $key => $value) {
                 $obj = $value->getObj();
@@ -82,7 +82,7 @@ class IndexController extends ApiController
             }
         }
         // 十篇推荐的文章
-        $shs = ArticleExt::model()->findAll(['condition'=>'type=1 and status=1','limit'=>6,'order'=>'sort desc,updated desc']);
+        $shs = ArticleExt::model()->findAll(['condition'=>'type=1 and status=1 and deleted=0','limit'=>6,'order'=>'sort desc,updated desc']);
         if($shs) {
             foreach ($shs as $key => $value) {
                 // $obj = $value->getObj();
@@ -96,7 +96,7 @@ class IndexController extends ApiController
                 ];
             }
         }
-        $shs = ArticleExt::model()->findAll(['condition'=>'type=2 and status=1','limit'=>6,'order'=>'sort desc,updated desc']);
+        $shs = ArticleExt::model()->findAll(['condition'=>'type=2 and status=1 and deleted=0','limit'=>6,'order'=>'sort desc,updated desc']);
         if($shs) {
             foreach ($shs as $key => $value) {
                 // $obj = $value->getObj();
