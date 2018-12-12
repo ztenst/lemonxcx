@@ -123,6 +123,8 @@ class ProductController extends ApiController
 		}
 		$data = $info->attributes;
 		$images = $info->images;
+		$data['images'][] = ImageTools::fixImage($info->image); 
+		$data['imgs'][] = $info->image; 
 		if($images) {
 			foreach ($images as $key => $value) {
 				$data['images'][] = ImageTools::fixImage($value->url); 
