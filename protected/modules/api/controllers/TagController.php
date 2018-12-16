@@ -119,81 +119,89 @@ class TagController extends ApiController{
     public function actionActiveTags()
     {
     	$data = [];
-    	$areas = CacheExt::gas('wap_all_area','AreaExt',0,'wap区域缓存',function (){
-		            $areas = AreaExt::model()->normal()->findAll(['condition'=>'parent=0','order'=>'sort asc']);
-		            $areas[0]['childArea'] = $areas[0]->childArea;
-		            return $this->addChild($areas);
-		            });
-    	$origin_tags = ProductExt::$types;
-    	$tag_names = TagExt::$xinfangCate;
-    	foreach ($origin_tags as $key => $value) {
-    		if($key=='soft') {
-    			$data['tags'][] = [
-    				'is_show'=>0,
-    				'name'=>$value['name'],
-    				'py'=>$key,
-    			];
-    			continue;
-    		}
-    		$fils = $value['filters'];
-    		$tags = $value['tags'];
-    		$antitags = array_flip($tags);
-    		$origin = $more = [];
-
-    		foreach ($fils['origin'] as $o) {
-    			if($o=='area') {
-    				$origin[] = [
-	    				'name'=>$key=='jm'||$key=='cma'?'地区':'产地',
-	    				'filed'=>'area',
-	    				'list'=>$areas
+    	// $areas = CacheExt::gas('wap_all_area','AreaExt',0,'wap区域缓存',function (){
+		   //          $areas = AreaExt::model()->normal()->findAll(['condition'=>'parent=0','order'=>'sort asc']);
+		   //          $areas[0]['childArea'] = $areas[0]->childArea;
+		   //          return $this->addChild($areas);
+		   //          });
+    	$data = CacheExt::gas('wap_all_area','AreaExt',0,'wap区域缓存',function (){
+    		$data = [];
+    		$areas = AreaExt::model()->normal()->findAll(['condition'=>'parent=0','order'=>'sort asc']);
+            $areas[0]['childArea'] = $areas[0]->childArea;
+            $areas = $this->addChild($areas);
+            $origin_tags = ProductExt::$types;
+	    	$tag_names = TagExt::$xinfangCate;
+	    	foreach ($origin_tags as $key => $value) {
+	    		if($key=='soft') {
+	    			$data['tags'][] = [
+	    				'is_show'=>0,
+	    				'name'=>$value['name'],
+	    				'py'=>$key,
 	    			];
-    			} else {
-    				if(strstr($o, 'price')) {
-    					$origin[] = [
-		    				'name'=>$tag_names['range'][$o],
-		    				'filed'=>'pricetag',
-		    				'list'=>Yii::app()->db->createCommand("select id,name from tag where cate='$o' and status=1")->queryAll(),
+	    			continue;
+	    		}
+	    		$fils = $value['filters'];
+	    		$tags = $value['tags'];
+	    		$antitags = array_flip($tags);
+	    		$origin = $more = [];
+
+	    		foreach ($fils['origin'] as $o) {
+	    			if($o=='area') {
+	    				$origin[] = [
+		    				'name'=>$key=='jm'||$key=='cma'?'地区':'产地',
+		    				'filed'=>'area',
+		    				'list'=>$areas
 		    			];
-    				} else {
-    					$origin[] = [
-		    				'name'=>$tag_names['direct'][$o],
-		    				'filed'=>$antitags[$o],
-		    				'list'=>Yii::app()->db->createCommand("select id,name from tag where cate='$o' and status=1")->queryAll(),
-		    			];
-    				}
-    			}
-    		}
-    		foreach ($fils['more'] as $o) {
-    			if($o=='sort') {
-    				$more[] = [
-    					'name'=>'排序',
-    					'filed'=>'sort',
-    					'list'=>[
-    						['id'=>1,'name'=>'价格从低到高'],
-    						['id'=>2,'name'=>'价格从高到低'],
-    						['id'=>3,'name'=>'最新发布'],
-    						// ['id'=>1,'name'=>'价格从低到高'],
-    						// ['id'=>1,'name'=>'价格从低到高'],
-    					],
-    				];
-    			} else {
-    				$more[] = [
-    					'name'=>$tag_names['direct'][$o],
-		    				'filed'=>$antitags[$o],
-		    				'list'=>Yii::app()->db->createCommand("select id,name from tag where cate='$o' and status=1")->queryAll(),
-    				];
-    			}
-    		}
-    		$data['tags'][] = [
-    			'is_show'=>1,
-    			'name'=>$value['name'],
-    			'py'=>$key,
-    			'filters'=>[
-    				['origin'=>$origin,'more'=>$more]
-    			],
-    		];
-    		
-    	}
+	    			} else {
+	    				if(strstr($o, 'price')) {
+	    					$origin[] = [
+			    				'name'=>$tag_names['range'][$o],
+			    				'filed'=>'pricetag',
+			    				'list'=>Yii::app()->db->createCommand("select id,name from tag where cate='$o' and status=1")->queryAll(),
+			    			];
+	    				} else {
+	    					$origin[] = [
+			    				'name'=>$tag_names['direct'][$o],
+			    				'filed'=>$antitags[$o],
+			    				'list'=>Yii::app()->db->createCommand("select id,name from tag where cate='$o' and status=1")->queryAll(),
+			    			];
+	    				}
+	    			}
+	    		}
+	    		foreach ($fils['more'] as $o) {
+	    			if($o=='sort') {
+	    				$more[] = [
+	    					'name'=>'排序',
+	    					'filed'=>'sort',
+	    					'list'=>[
+	    						['id'=>1,'name'=>'价格从低到高'],
+	    						['id'=>2,'name'=>'价格从高到低'],
+	    						['id'=>3,'name'=>'最新发布'],
+	    						// ['id'=>1,'name'=>'价格从低到高'],
+	    						// ['id'=>1,'name'=>'价格从低到高'],
+	    					],
+	    				];
+	    			} else {
+	    				$more[] = [
+	    					'name'=>$tag_names['direct'][$o],
+			    				'filed'=>$antitags[$o],
+			    				'list'=>Yii::app()->db->createCommand("select id,name from tag where cate='$o' and status=1")->queryAll(),
+	    				];
+	    			}
+	    		}
+	    		$data['tags'][] = [
+	    			'is_show'=>1,
+	    			'name'=>$value['name'],
+	    			'py'=>$key,
+	    			'filters'=>[
+	    				['origin'=>$origin,'more'=>$more]
+	    			],
+	    		];
+	    		
+	    	}
+	    	return $data;
+    	});
+	    	
     	$this->frame['data'] = $data;
     }
 }
