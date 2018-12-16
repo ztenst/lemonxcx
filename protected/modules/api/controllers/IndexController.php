@@ -26,7 +26,7 @@ class IndexController extends ApiController
             }
         }
         // 分类图
-        $tags = TagExt::model()->normal()->findAll(['condition'=>"cate='tab'",'limit'=>10]);
+        $tags = TagExt::model()->findAll(['condition'=>"cate='tab'",'order'=>'sort asc']);
         if($tags) {
             $aat = ProductExt::$types;
             $aats = [];
@@ -61,12 +61,12 @@ class IndexController extends ApiController
                 $data['long_recoms'][] = [
                     'pid'=>$value->getObj()->id,
                     // 'name'=>$value->name,//750
-                    'img'=>ImageTools::fixImage($value->image,750,260),
+                    'img'=>ImageTools::fixImage($value->image),
                 ];
             }
         }
         // 6个产品
-        $shs = RecomExt::model()->normal()->findAll(['condition'=>'cid=3','limit'=>6]);
+        $shs = RecomExt::model()->normal()->findAll(['condition'=>'cid=3 and deleted=0','limit'=>6]);
         if($shs) {
             foreach ($shs as $key => $value) {
                 $obj = $value->getObj();
@@ -77,12 +77,12 @@ class IndexController extends ApiController
                     'company'=>$obj->company,
                     'rzwords'=>$obj->is_rz?$rzwords:'',
                     // 'name'=>$value->name,//750
-                    'img'=>ImageTools::fixImage($value->image?$value->image:$obj->image,750,260),
+                    'img'=>ImageTools::fixImage($value->image?$value->image:$obj->image),
                 ];
             }
         }
         // 十篇推荐的文章
-        $shs = ArticleExt::model()->findAll(['condition'=>'type=1 and status=1','limit'=>6,'order'=>'sort desc,updated desc']);
+        $shs = ArticleExt::model()->findAll(['condition'=>'type=1 and status=1 and deleted=0','limit'=>6,'order'=>'sort desc,updated desc']);
         if($shs) {
             foreach ($shs as $key => $value) {
                 // $obj = $value->getObj();
@@ -92,11 +92,11 @@ class IndexController extends ApiController
                     'author'=>$value->user?$value->user->name:'佚名',
                     'hits'=>$value->hits,
                     // 'name'=>$value->name,//750
-                    'img'=>ImageTools::fixImage($value->image,750,260),
+                    'img'=>ImageTools::fixImage($value->image),
                 ];
             }
         }
-        $shs = ArticleExt::model()->findAll(['condition'=>'type=0 and status=1','limit'=>6,'order'=>'sort desc,updated desc']);
+        $shs = ArticleExt::model()->findAll(['condition'=>'type=2 and status=1 and deleted=0','limit'=>6,'order'=>'sort desc,updated desc']);
         if($shs) {
             foreach ($shs as $key => $value) {
                 // $obj = $value->getObj();
@@ -106,7 +106,7 @@ class IndexController extends ApiController
                     'author'=>$value->user?$value->user->name:'佚名',
                     'hits'=>$value->hits,
                     // 'name'=>$value->name,//750
-                    'img'=>ImageTools::fixImage($value->image,750,260),
+                    'img'=>ImageTools::fixImage($value->image),
                 ];
             }
         }

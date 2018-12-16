@@ -118,37 +118,37 @@ class TagController extends ApiController{
 
     public function actionActiveTags()
     {
-    	$data = [];
+    	// $data = [];
     	// $areas = CacheExt::gas('wap_all_area','AreaExt',0,'wap区域缓存',function (){
 		   //          $areas = AreaExt::model()->normal()->findAll(['condition'=>'parent=0','order'=>'sort asc']);
 		   //          $areas[0]['childArea'] = $areas[0]->childArea;
 		   //          return $this->addChild($areas);
 		   //          });
-    	$data = CacheExt::gas('wap_all_area','AreaExt',0,'wap区域缓存',function (){
-    		$data = [];
+    	$data = CacheExt::gas('xcx_tag','AreaExt',0,'小程序标签',function (){
     		$areas = AreaExt::model()->normal()->findAll(['condition'=>'parent=0','order'=>'sort asc']);
             $areas[0]['childArea'] = $areas[0]->childArea;
             $areas = $this->addChild($areas);
-            $origin_tags = ProductExt::$types;
+    		$data = [];
+    		$origin_tags = ProductExt::$types;
 	    	$tag_names = TagExt::$xinfangCate;
 	    	foreach ($origin_tags as $key => $value) {
-	    		if($key=='soft') {
-	    			$data['tags'][] = [
-	    				'is_show'=>0,
-	    				'name'=>$value['name'],
-	    				'py'=>$key,
-	    			];
-	    			continue;
-	    		}
+	    		// if($key=='soft') {
+	    		// 	$data['tags'][] = [
+	    		// 		'is_show'=>0,
+	    		// 		'name'=>$value['name'],
+	    		// 		'py'=>$key,
+	    		// 		'filters'=>[],
+	    		// 	];
+	    		// 	continue;
+	    		// }
 	    		$fils = $value['filters'];
 	    		$tags = $value['tags'];
 	    		$antitags = array_flip($tags);
 	    		$origin = $more = [];
-
 	    		foreach ($fils['origin'] as $o) {
 	    			if($o=='area') {
 	    				$origin[] = [
-		    				'name'=>$key=='jm'||$key=='cma'?'地区':'产地',
+		    				'name'=>$key=='jm'||$key=='cma'||$key=='bx'?'地区':'产地',
 		    				'filed'=>'area',
 		    				'list'=>$areas
 		    			];
@@ -168,6 +168,15 @@ class TagController extends ApiController{
 	    				}
 	    			}
 	    		}
+	    		$more[] = [
+					'name'=>'认证',
+					'filed'=>'rz',
+					'list'=>[
+						['id'=>1,'name'=>'认证商品'],
+						// ['id'=>2,'name'=>'全部商品'],
+						// ['id'=>1,'name'=>'价格从低到高'],
+					],
+				];
 	    		foreach ($fils['more'] as $o) {
 	    			if($o=='sort') {
 	    				$more[] = [
@@ -188,6 +197,7 @@ class TagController extends ApiController{
 			    				'list'=>Yii::app()->db->createCommand("select id,name from tag where cate='$o' and status=1")->queryAll(),
 	    				];
 	    			}
+	    			
 	    		}
 	    		$data['tags'][] = [
 	    			'is_show'=>1,
@@ -203,5 +213,9 @@ class TagController extends ApiController{
     	});
 	    	
     	$this->frame['data'] = $data;
+    }
+    public function getProTags()
+    {
+    	# code...
     }
 }

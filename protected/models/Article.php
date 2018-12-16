@@ -16,6 +16,7 @@
  * @property string $desc
  * @property string $image
  * @property string $content
+ * @property integer $cidn
  * @property integer $cid
  * @property integer $sort
  * @property integer $status
@@ -43,12 +44,12 @@ class Article extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('created', 'required'),
-			array('uid, hits, is_hot, type, cid, sort, status, deleted, created, updated', 'numerical', 'integerOnly'=>true),
+			array('uid, hits, is_hot, type, cidn, cid, sort, status, deleted, created, updated', 'numerical', 'integerOnly'=>true),
 			array('title, sub_title, author, source, desc, image', 'length', 'max'=>255),
 			array('content, data_conf', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, title, sub_title, uid, author, source, hits, is_hot, type, desc, image, content, cid, sort, status, data_conf, deleted, created, updated', 'safe', 'on'=>'search'),
+			array('id, title, sub_title, uid, author, source, hits, is_hot, type, desc, image, content, cidn, cid, sort, status, data_conf, deleted, created, updated', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -81,6 +82,7 @@ class Article extends CActiveRecord
 			'desc' => 'Desc',
 			'image' => 'Image',
 			'content' => 'Content',
+			'cidn' => 'Cidn',
 			'cid' => 'Cid',
 			'sort' => 'Sort',
 			'status' => 'Status',
@@ -121,6 +123,7 @@ class Article extends CActiveRecord
 		$criteria->compare('desc',$this->desc,true);
 		$criteria->compare('image',$this->image,true);
 		$criteria->compare('content',$this->content,true);
+		$criteria->compare('cidn',$this->cidn);
 		$criteria->compare('cid',$this->cid);
 		$criteria->compare('sort',$this->sort);
 		$criteria->compare('status',$this->status);

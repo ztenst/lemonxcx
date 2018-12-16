@@ -37,7 +37,7 @@ $childArea = $parent ? AreaExt::model()->getByParent($parent)->normal()->findAll
                 'class'=>'form-control input-inline',
                 'ajax' =>array(
                     'url' => Yii::app()->createUrl('admin/area/ajaxGetArea'),
-                    'update' => '#CompanyExt_street',
+                    'update' => '#ProductExt_street',
                     'data'=>array('area'=>'js:this.value'),
                 )
             )

@@ -16,16 +16,22 @@ class CusController extends ApiController
 		$criteria = new CDbCriteria;
 		$criteria->order = 't.sort desc,t.updated desc';
 		$criteria->limit = $limit;
+        $criteria->addCondition("t.deleted=0");
         // 这段代码比较恶心 以后万一有bug再说
-        $type==2 && $type = 0;
 		// $criteria->addCondition('t.status=1');
 		if($kw) {
 			$criteria->addSearchCondition('t.title',$kw);
 		}
-		if($cid) {
-			$criteria->addCondition("t.cid=:cid");
-			$criteria->params[':cid'] = $cid;
-		}
+        if($type==1) {
+            if($cid) {
+                $criteria->addCondition("t.cidn=:cidn");
+                $criteria->params[':cidn'] = $cid;
+            }
+        } else
+    		if($cid) {
+    			$criteria->addCondition("t.cid=:cid");
+    			$criteria->params[':cid'] = $cid;
+    		}
         if($uid&&!$save) {
             $criteria->addCondition("t.uid=:uid");
             $criteria->params[':uid'] = $uid;
@@ -54,7 +60,7 @@ class CusController extends ApiController
 			foreach ($infos as $key => $value) {
 				$data['list'][] = [
 					'id'=>$value->id,
-					'name'=>Tools::u8_title_substr($value->title,20),
+					'name'=>Tools::u8_title_substr($value->title,54),
 					// 'cate'=>$value->cate?$value->cate->name:'',
 					'date'=>date('Y-m-d H:i',$value->updated),
 					'author'=>$value->user?$value->user->name:'',
@@ -82,6 +88,18 @@ class CusController extends ApiController
     {
         $data = [];
         $tags = TagExt::model()->findAll("cate='wzbq'");
+        if($tags) {
+            foreach ($tags as $key => $value) {
+                $data[] = ['id'=>$value->id,'name'=>$value->name];
+            }
+        }
+        $this->frame['data'] = $data;
+    }
+
+    public function actionNewsTagsNews()
+    {
+        $data = [];
+        $tags = TagExt::model()->findAll("cate='xwbq'");
         if($tags) {
             foreach ($tags as $key => $value) {
                 $data[] = ['id'=>$value->id,'name'=>$value->name];
@@ -220,7 +238,9 @@ class CusController extends ApiController
     		$obj->title = $title;
     		$obj->content = $content;
     		$obj->image = $fm;
-            $obj->type = 1;
+            $obj->cid = $cid;
+            $obj->type = 2;
+            $obj->image = str_replace("https", "http", $obj->image);
     		if($obj->save()) {
     			Yii::app()->db->createCommand("delete from album where pid=".$obj->id." and type=2")->execute();
                 // AlbumExt::model()->deteleAllByAttributes(['pid'=>$arrs['id'],'type'=>1]);
@@ -236,7 +256,7 @@ class CusController extends ApiController
                     foreach ($imgs as $key => $value) {
                         $im = new AlbumExt;
                         $im->pid = $obj->id;
-                        $im->url = $value;
+                        $im->url = str_replace("https", "http", $value);
                         $im->type = 2;
                         $im->save();
                     }
@@ -305,6 +325,7 @@ class CusController extends ApiController
                 return $this->returnError('该评论已存在，请勿重复发布');
             }
         $obj->attributes = $values;
+        $obj->status = 1;
         if(!$obj->save()) {
             $this->returnError(current(current($obj->getErrors())));
         }

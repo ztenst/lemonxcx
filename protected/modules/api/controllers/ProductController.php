@@ -16,13 +16,25 @@ class ProductController extends ApiController
 		$save = (int)Yii::app()->request->getQuery('save',0);
 		$savetype = (int)Yii::app()->request->getQuery('savetype',0);
 		$order = (int)Yii::app()->request->getQuery('order',0);
+		$rz = (int)Yii::app()->request->getQuery('rz','');
 		$page = (int)Yii::app()->request->getQuery('page',1);
 		$limit = (int)Yii::app()->request->getQuery('limit',20);
 		$status = Yii::app()->request->getQuery('status',1);
+		$sort = Yii::app()->request->getQuery('sort',0);
 		$kw = $this->cleanXss(Yii::app()->request->getQuery('kw',''));
 		!$page && $page = 1;
 		$criteria = new CDbCriteria;
-		$criteria->order = 'sort desc,updated desc';
+		$criteria->addCondition("deleted=0");
+		if(!$sort) {
+			$criteria->order = 'sort desc,updated desc';
+		} elseif ($sort==1) {
+			$criteria->order = 'price asc,sort desc,updated desc';
+		} elseif ($sort==2) {
+			$criteria->order = 'price desc,sort desc,updated desc';
+		} elseif ($sort==3) {
+			$criteria->order = 'created desc,sort desc,updated desc';
+		}
+		
 		$criteria->limit = $limit;
 		if($kw) {
 			$criteria->addSearchCondition('name',$kw);
@@ -63,6 +75,9 @@ class ProductController extends ApiController
 		}
 		if(is_numeric($status)) {
 			$criteria->addCondition('status='.$status);
+		}
+		if($rz) {
+			$criteria->addCondition('is_rz='.$rz);
 		}
 		$ress = ProductExt::model()->getList($criteria,$limit);
 		$infos = $ress->data;
@@ -108,6 +123,8 @@ class ProductController extends ApiController
 		}
 		$data = $info->attributes;
 		$images = $info->images;
+		$data['images'][] = ImageTools::fixImage($info->image); 
+		$data['imgs'][] = $info->image; 
 		if($images) {
 			foreach ($images as $key => $value) {
 				$data['images'][] = ImageTools::fixImage($value->url); 
@@ -334,16 +351,25 @@ class ProductController extends ApiController
 
     public function actionGetTagArr()
     {
-    	$this->frame['data'] = ['药剂'=>'yj',
-'喷枪'=>'pq',
-'活性炭'=>'hxt',
-'净化器'=>'jhq',
-'净水器'=>'jsq',
-'检测设备'=>'jcsb',
-'耗材'=>'hc',
-'加盟'=>'jm',
-'CMA合作'=>'cma',
-'软件服务'=>'soft',];
+    	$aat = ProductExt::$types;
+        $aats = [];
+        $arr = [];
+        foreach ($aat as $key => $value) {
+            $aats[$value['name']] = $key;
+        }
+        $pyarr = ['yj'=>'i1','pq'=>'i2','hxt'=>'i3','jhq'=>'i4','jsq'=>'i5','jcsb'=>'i6','hc'=>'i7','cma'=>'i8','soft'=>'i9','jm'=>'i10','bx'=>'i11',];
+    	$tags = TagExt::model()->normal()->findAll(['condition'=>"cate='tab'",'order'=>'sort asc']);
+    	foreach ($tags as $key => $value) {
+    		if(!isset($aats[$value->name]))
+    			continue;
+    		if(!isset($pyarr[$aats[$value->name]]))
+    			continue;
+    		$arr[] = [
+    			'name'=>$value->name,'py'=>$aats[$value->name],'i'=>$pyarr[$aats[$value->name]]
+    		];
+    	}
+    	// $arr = array_combine(array_values(CHtml::listData($tags,'id','name')),array_values(CHtml::listData($tags,'id','cate')));
+    	$this->frame['data'] = $arr;
     }
 
     public function actionGetProTag($type='')
@@ -389,7 +415,7 @@ class ProductController extends ApiController
     	}
     	$obj->attributes = $arrs;
     	$obj->status = 0;
-
+    	$obj->image = str_replace("https", "http", $obj->image);
     	if($obj->save()) {
     		Yii::app()->db->createCommand("delete from album where pid=".$obj->id." and type=1")->execute();
     		// AlbumExt::model()->deteleAllByAttributes(['pid'=>$arrs['id'],'type'=>1]);
@@ -405,7 +431,7 @@ class ProductController extends ApiController
     			foreach ($imgs as $key => $value) {
     				$im = new AlbumExt;
     				$im->pid = $obj->id;
-    				$im->url = $value;
+    				$im->url = str_replace("https", "http", $value);
     				$im->type = 1;
     				$im->save();
     			}

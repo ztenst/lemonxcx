@@ -31,15 +31,15 @@ class ProductExt extends Product{
 
     public static $types = [
         'yj'=>['name'=>'药剂','tags'=>['cid'=>'yjzl','mid'=>'yjcl','fid'=>'yjgn'],'isarea'=>1,'isprice'=>1,'filters'=>['origin'=>['area','yjzl','yjprice'],'more'=>['yjgn','yjcl','sort']]],
-        'pq'=>['name'=>'喷枪','tags'=>['cid'=>'pqkj'],'isarea'=>1,'isprice'=>1,'filters'=>['origin'=>['area','pqkj','pqprice'],'more'=>['sort']]],
-        'hxt'=>['name'=>'活性炭','tags'=>['cid'=>'hxtyl','fid'=>'hxtgn'],'isarea'=>0,'isprice'=>1,'filters'=>['origin'=>['hxtyl','hxtgn','hxtprice'],'more'=>['sort']]],
+        'pq'=>['name'=>'喷枪','tags'=>['cid'=>'pqkj','fid'=>'pqpp'],'isarea'=>1,'isprice'=>1,'filters'=>['origin'=>['area','pqkj','pqprice'],'more'=>['sort','pqpp']]],
+        'hxt'=>['name'=>'活性炭','tags'=>['cid'=>'hxtyl','fid'=>'hxtgn','mid'=>'jcsblx'],'isarea'=>1,'isprice'=>1,'filters'=>['origin'=>['area','hxtyl','hxtprice'],'more'=>['sort','hxtgn','jcsblx']]],
         'jhq'=>['name'=>'净化器','tags'=>['cid'=>'jhqjyzb','fid'=>'jhqgn','cadrid'=>'jhqcadr','ccmid'=>'jhqccm'],'isarea'=>1,'isprice'=>1,'filters'=>['origin'=>['area','jhqcadr','jhqprice'],'more'=>['jhqgn','jhqjyzb','jhqccm','sort']]],
         'jsq'=>['name'=>'净水器','tags'=>['cid'=>'jsqglcj','mid'=>'jsqglcz'],'isarea'=>1,'isprice'=>1,'filters'=>['origin'=>['area','jsqglcz','jsqprice'],'more'=>['jsqglcj','sort']]],
         'jcsb'=>['name'=>'检测设备','tags'=>['cid'=>'jcsblx','fid'=>'jcsbpp'],'isarea'=>0,'isprice'=>1,'filters'=>['origin'=>['jcsbpp','jcsblx','jcsbprice'],'more'=>['sort']]],
         'hc'=>['name'=>'耗材','tags'=>['cid'=>'hczl','fid'=>'hcpp','mid'=>'hccz'],'isarea'=>0,'isprice'=>1,'filters'=>['origin'=>['hczl','hcpp','hcprice'],'more'=>['hccz','sort']]],
         'jm'=>['name'=>'加盟','tags'=>['cid'=>'jmzl','fid'=>'jmpp'],'isarea'=>1,'isprice'=>0,'filters'=>['origin'=>['area','jmzl','jmpp'],'more'=>['sort']]],
         'cma'=>['name'=>'CMA合作','tags'=>['cid'=>'cmazl','fid'=>'cmajb'],'isarea'=>1,'isprice'=>0,'filters'=>['origin'=>['area','cmazl','cmajb'],'more'=>['sort']]],
-        'soft'=>['name'=>'软件服务','tags'=>['cid'=>'gwzz'],'isarea'=>0,'isprice'=>1,'filters'=>['origin'=>[],'more'=>[]]],
+        'soft'=>['name'=>'软件服务','tags'=>['cid'=>'gwzz','fid'=>'rjlx'],'isarea'=>1,'isprice'=>1,'filters'=>['origin'=>['area','rjlx','gwzz'],'more'=>['sort']]],
         'bx'=>['name'=>'保险服务','tags'=>['cid'=>'bxgs','fid'=>'bxxz'],'isarea'=>1,'isprice'=>0,'filters'=>['origin'=>['area','bxgs','bxxz'],'more'=>['sort']]],
     ];
 
