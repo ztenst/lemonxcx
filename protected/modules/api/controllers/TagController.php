@@ -109,6 +109,16 @@ class TagController extends ApiController{
             }
             //将对象转换成数组
             $areas[$i] = $areas[$i]->attributes;
+            unset($areas[$i]['pinyin']);
+            unset($areas[$i]['sort']);
+            unset($areas[$i]['map_lng']);
+            unset($areas[$i]['map_lat']);
+            unset($areas[$i]['map_zoom']);
+            unset($areas[$i]['deleted']);
+            unset($areas[$i]['created']);
+            unset($areas[$i]['updated']);
+            unset($areas[$i]['old_id']);
+            unset($areas[$i]['status']);
             if($child){
                 $areas[$i]['childAreas']=$child;
             }
@@ -120,7 +130,7 @@ class TagController extends ApiController{
     {
     	$data = [];
     	$areas = CacheExt::gas('wap_all_area','AreaExt',0,'wap区域缓存',function (){
-		            $areas = AreaExt::model()->normal()->findAll(['condition'=>'parent=0','order'=>'sort asc']);
+		            $areas = AreaExt::model()->normal()->findAll(['select'=>'id,name,parent','condition'=>'parent=0','order'=>'sort asc']);
 		            $areas[0]['childArea'] = $areas[0]->childArea;
 		            return $this->addChild($areas);
 		            });
