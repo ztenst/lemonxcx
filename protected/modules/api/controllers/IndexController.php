@@ -47,8 +47,9 @@ class IndexController extends ApiController
         $shs = RecomExt::model()->normal()->findAll(['condition'=>'cid=2','limit'=>2]);
         if($shs) {
             foreach ($shs as $key => $value) {
+                $obj = $value->getObj();
                 $data['short_recoms'][] = [
-                    'pid'=>$value->getObj()->id,
+                    'pid'=>$obj?$obj->id:'',
                     // 'name'=>$value->name,//750
                     'img'=>ImageTools::fixImage($value->image,370,260),
                 ];
@@ -58,8 +59,9 @@ class IndexController extends ApiController
         $shs = RecomExt::model()->normal()->findAll(['condition'=>'cid=1','limit'=>1]);
         if($shs) {
             foreach ($shs as $key => $value) {
+                $obj = $value->getObj();
                 $data['long_recoms'][] = [
-                    'pid'=>$value->getObj()->id,
+                    'pid'=>$obj?$obj->id:'',
                     // 'name'=>$value->name,//750
                     'img'=>ImageTools::fixImage($value->image),
                 ];
@@ -70,8 +72,11 @@ class IndexController extends ApiController
         if($shs) {
             foreach ($shs as $key => $value) {
                 $obj = $value->getObj();
+                if(!$obj) {
+                    continue;
+                }
                 $data['products'][] = [
-                    'pid'=>$obj->id,
+                    'pid'=>$obj?$obj->id:'',
                     'name'=>$obj->name,
                     'price'=>$obj->price,
                     'company'=>$obj->company,
