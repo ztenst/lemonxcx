@@ -118,17 +118,22 @@ class TagController extends ApiController{
 
     public function actionActiveTags()
     {
-    	// $data = [];
-    	// $areas = CacheExt::gas('wap_all_area','AreaExt',0,'wap区域缓存',function (){
-		   //          $areas = AreaExt::model()->normal()->findAll(['condition'=>'parent=0','order'=>'sort asc']);
-		   //          $areas[0]['childArea'] = $areas[0]->childArea;
-		   //          return $this->addChild($areas);
-		   //          });
-    	$data = CacheExt::gas('xcx_tag','AreaExt',0,'小程序标签',function (){
-    		$areas = AreaExt::model()->normal()->findAll(['condition'=>'parent=0','order'=>'sort asc']);
-            $areas[0]['childArea'] = $areas[0]->childArea;
-            $areas = $this->addChild($areas);
-    		$data = [];
+    	$data = [];
+    	$areas = CacheExt::gas('wap_all_area','AreaExt',0,'wap区域缓存',function (){
+		            $areas = AreaExt::model()->normal()->findAll(['condition'=>'parent=0','order'=>'sort asc']);
+		            $areas[0]['childArea'] = $areas[0]->childArea;
+		            return $this->addChild($areas);
+		            });
+    	$tags = CacheExt::gas('wap_all_tags','AreaExt',0,'waptags',function (){
+    				$tags = [];
+		            $areas = TagExt::model()->findAll(['condition'=>'status=1','order'=>'sort asc']);
+		            foreach ($areas as $key => $value) {
+		            	$tags[$value['cate']] = ['id'=>$value['id'],'name'=>$value['name']];
+		            }
+		            // $areas[0]['childArea'] = $areas[0]->childArea;
+		            return $tags;
+		            });
+
     		$origin_tags = ProductExt::$types;
 	    	$tag_names = TagExt::$xinfangCate;
 	    	foreach ($origin_tags as $key => $value) {
@@ -157,13 +162,13 @@ class TagController extends ApiController{
 	    					$origin[] = [
 			    				'name'=>$tag_names['range'][$o],
 			    				'filed'=>'pricetag',
-			    				'list'=>Yii::app()->db->createCommand("select id,name from tag where cate='$o' and status=1")->queryAll(),
+			    				'list'=>isset($tags[$o])?$tags[$o]:[],
 			    			];
 	    				} else {
 	    					$origin[] = [
 			    				'name'=>$tag_names['direct'][$o],
 			    				'filed'=>$antitags[$o],
-			    				'list'=>Yii::app()->db->createCommand("select id,name from tag where cate='$o' and status=1")->queryAll(),
+			    				'list'=>isset($tags[$o])?$tags[$o]:[],
 			    			];
 	    				}
 	    			}
@@ -194,7 +199,7 @@ class TagController extends ApiController{
 	    				$more[] = [
 	    					'name'=>$tag_names['direct'][$o],
 			    				'filed'=>$antitags[$o],
-			    				'list'=>Yii::app()->db->createCommand("select id,name from tag where cate='$o' and status=1")->queryAll(),
+			    				'list'=>isset($tags[$o])?$tags[$o]:[],
 	    				];
 	    			}
 	    			
@@ -209,8 +214,6 @@ class TagController extends ApiController{
 	    		];
 	    		
 	    	}
-	    	return $data;
-    	});
 	    	
     	$this->frame['data'] = $data;
     }
