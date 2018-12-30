@@ -70,7 +70,7 @@ class ProductController extends ApiController
 			}
 			$criteria->addInCondition('id',$ids);
 		}
-		if($uid&&!$save||$uid&&!$order) {
+		if($uid&&!$save && $uid&&!$order) {
 			$criteria->addCondition('uid='.$uid);
 		}
 		if(is_numeric($status)) {
