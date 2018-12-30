@@ -410,6 +410,7 @@ class ProductController extends ApiController
             return $this->returnError('您的账号暂无权限操作，请联系管理员');
         }
     	$imgs = isset($arrs['images'])?$arrs['images']:[];
+
     	unset($arrs['images']);
     	if(isset($arrs['id'])&&$arrs['id']) {
     		if($title = $arrs['name']) {
@@ -426,7 +427,9 @@ class ProductController extends ApiController
     		$obj = new ProductExt;
     	}
     	$obj->attributes = $arrs;
-    	
+    	if(!$obj->image && $imgs) {
+    		$obj->image = $imgs[0];
+    	}
     	$obj->status = 0;
     	$obj->image = str_replace("https", "http", $obj->image);
     	if($obj->save()) {
