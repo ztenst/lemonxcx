@@ -26,7 +26,8 @@ class SiteExt extends Site{
         'rzwords'=>'',
         'shengming'=>'',
         'usernopic'=>'',
-        'notice'=>''
+        'notice'=>'',
+        'topIdArr'=>'',
     ];
     public static $cateName = [
         'qjpz' => '全局配置',

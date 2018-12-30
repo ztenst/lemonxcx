@@ -20,9 +20,11 @@ class IndexController extends ApiController
         // 轮播图
         $banner = SiteExt::getAttr('qjpz','indeximages');
         $rzwords = SiteExt::getAttr('qjpz','rzwords');
+        $indexIds = SiteExt::getAttr('qjpz','topIdArr');
         if($banner) {
             foreach ($banner as $key => $value) {
                 $data['imgs'][] = Yii::app()->file->is_heng?ImageTools::fixImage($value,750,376):ImageTools::fixImage($value,750,826);
+                $data['indexIds'][] = isset($indexIds[$key])?$indexIds[$key]:0;
             }
         }
         // 分类图
