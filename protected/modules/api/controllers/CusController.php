@@ -278,9 +278,11 @@ class CusController extends ApiController
         $obj = new LogExt;
         $obj->uid = $uid;
         $obj->pid = $pid;
+
         $obj->type = $type;
         $pro = ProductExt::model()->findByPk($pid);
         $user = UserExt::model()->findByPk($uid);
+        $obj->puid = $pro->uid;
         $phone = $pro->phone;
         $time = time()-3600;
         if($type==2) {
