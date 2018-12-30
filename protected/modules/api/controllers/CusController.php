@@ -172,7 +172,7 @@ class CusController extends ApiController
             $pp = ArticleExt::model()->findByPk($pid);
             $type = $pp->type==1?2:3;
             $staff = UserExt::model()->findByPk($uid);
-            if($save = SaveExt::model()->find('pid='.(int)$pid.' and type=$type and uid='.$staff->id)) {
+            if($save = SaveExt::model()->find('pid='.(int)$pid." and type=$type and uid=".$staff->id)) {
                 SaveExt::model()->deleteAllByAttributes(['pid'=>$pid,'uid'=>$staff->id,'type'=>$type]);
                 $this->frame['data'] = 0;
                 $this->returnSuccess('取消收藏成功');
