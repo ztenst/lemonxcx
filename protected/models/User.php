@@ -28,6 +28,8 @@
  * @property string $image
  * @property integer $sex
  * @property string $note
+ * @property integer $pro_status
+ * @property integer $rz_status
  * @property integer $status
  * @property integer $deleted
  * @property integer $sort
@@ -53,13 +55,13 @@ class User extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('name, created', 'required'),
-			array('parent, is_jl, is_manage, qf_uid, pid, vip_expire, type, sex, status, deleted, sort, created, updated', 'numerical', 'integerOnly'=>true),
+			array('parent, is_jl, is_manage, qf_uid, pid, vip_expire, type, sex, pro_status, rz_status, status, deleted, sort, created, updated', 'numerical', 'integerOnly'=>true),
 			array('pwd, true_name, licence, id_pic, id_pic_2, openid, company, ava, image, note', 'length', 'max'=>255),
 			array('wx, name, city, pro', 'length', 'max'=>100),
 			array('phone', 'length', 'max'=>15),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, pwd, wx, phone, true_name, name, parent, is_jl, is_manage, licence, id_pic, id_pic_2, qf_uid, pid, city, pro, openid, vip_expire, company, type, ava, image, sex, note, status, deleted, sort, created, updated', 'safe', 'on'=>'search'),
+			array('id, pwd, wx, phone, true_name, name, parent, is_jl, is_manage, licence, id_pic, id_pic_2, qf_uid, pid, city, pro, openid, vip_expire, company, type, ava, image, sex, note, pro_status, rz_status, status, deleted, sort, created, updated', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -104,6 +106,8 @@ class User extends CActiveRecord
 			'image' => 'Image',
 			'sex' => 'Sex',
 			'note' => 'Note',
+			'pro_status' => 'Pro Status',
+			'rz_status' => 'Rz Status',
 			'status' => 'Status',
 			'deleted' => 'Deleted',
 			'sort' => 'Sort',
@@ -154,6 +158,8 @@ class User extends CActiveRecord
 		$criteria->compare('image',$this->image,true);
 		$criteria->compare('sex',$this->sex);
 		$criteria->compare('note',$this->note,true);
+		$criteria->compare('pro_status',$this->pro_status);
+		$criteria->compare('rz_status',$this->rz_status);
 		$criteria->compare('status',$this->status);
 		$criteria->compare('deleted',$this->deleted);
 		$criteria->compare('sort',$this->sort);

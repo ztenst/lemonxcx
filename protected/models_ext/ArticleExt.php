@@ -61,9 +61,9 @@ class ArticleExt extends Article{
 
     public function afterFind() {
         parent::afterFind();
-        if(!$this->image) {
-            $this->image = SiteExt::getAttr('qjpz','articlenopic');
-        }
+        // if(!$this->image) {
+        //     $this->image = SiteExt::getAttr('qjpz','articlenopic');
+        // }
     }
 
     public function beforeValidate() {

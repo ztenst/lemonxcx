@@ -29,6 +29,20 @@ $this->breadcrumbs = array($this->controllerName.'管理', $this->pageTitle);
     <div class="col-md-2"><?php echo $form->error($article, 'phone') ?></div>
 </div>
 <div class="form-group">
+    <label class="col-md-2 control-label">公司<span class="required" aria-required="true">*</span></label>
+    <div class="col-md-4">
+        <?php echo $form->textField($article, 'company', array('class' => 'form-control')); ?>
+    </div>
+    <div class="col-md-2"><?php echo $form->error($article, 'company') ?></div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label">备注<span class="required" aria-required="true">*</span></label>
+    <div class="col-md-4">
+        <?php echo $form->textField($article, 'note', array('class' => 'form-control')); ?>
+    </div>
+    <div class="col-md-2"><?php echo $form->error($article, 'note') ?></div>
+</div>
+<div class="form-group">
     <label class="col-md-2 control-label">微信号<span class="required" aria-required="true">*</span></label>
     <div class="col-md-4">
         <?php echo $form->textField($article, 'wx', array('class' => 'form-control')); ?>
@@ -46,6 +60,27 @@ $this->breadcrumbs = array($this->controllerName.'管理', $this->pageTitle);
     <label class="col-md-2 control-label text-nowrap">头像</label>
     <div class="col-md-8">
         <?php $this->widget('FileUpload',array('model'=>$article,'attribute'=>'image','inputName'=>'img','width'=>400,'height'=>300)); ?>
+        <span class="help-block">建议尺寸：430*230</span> 
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label text-nowrap">身份证正面</label>
+    <div class="col-md-8">
+        <?php $this->widget('FileUpload',array('model'=>$article,'attribute'=>'id_pic','inputName'=>'img','width'=>400,'height'=>300)); ?>
+        <span class="help-block">建议尺寸：430*230</span> 
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label text-nowrap">身份证反面</label>
+    <div class="col-md-8">
+        <?php $this->widget('FileUpload',array('model'=>$article,'attribute'=>'id_pic_2','inputName'=>'img','width'=>400,'height'=>300)); ?>
+        <span class="help-block">建议尺寸：430*230</span> 
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label text-nowrap">营业执照</label>
+    <div class="col-md-8">
+        <?php $this->widget('FileUpload',array('model'=>$article,'attribute'=>'licence','inputName'=>'img','width'=>400,'height'=>300)); ?>
         <span class="help-block">建议尺寸：430*230</span> 
     </div>
 </div>

@@ -94,7 +94,7 @@ class ProductController extends ApiController
 					'company'=>$value->company,
 					'price'=>$value->price,
 					'hits'=>$value->hits,
-					'ts'=>$value->shortdes,
+					'ts'=>Tools::u8_title_substr($value->shortdes,30),
 					'image'=>ImageTools::fixImage($value->image,370,250),
 				];
 			}
@@ -399,6 +399,10 @@ class ProductController extends ApiController
     public function actionAddPro()
     {
     	$arrs = Yii::app()->request->getPost('ProductExt',[]);
+    	$user = UserExt::model()->findByPk($arrs['uid']);
+    	if($user->status==0) {
+            return $this->returnError('您的账号暂无权限操作，请联系管理员');
+        }
     	$imgs = isset($arrs['images'])?$arrs['images']:[];
     	unset($arrs['images']);
     	if(isset($arrs['id'])&&$arrs['id']) {
@@ -416,6 +420,7 @@ class ProductController extends ApiController
     		$obj = new ProductExt;
     	}
     	$obj->attributes = $arrs;
+    	
     	$obj->status = 0;
     	$obj->image = str_replace("https", "http", $obj->image);
     	if($obj->save()) {
@@ -439,7 +444,7 @@ class ProductController extends ApiController
     			}
     		}
     	}
-    	$this->returnSuccess('发布成功');
+    	$this->returnSuccess('发布或编辑商品成功');
     }
 
     public function actionChangeStatus($id='',$status='')

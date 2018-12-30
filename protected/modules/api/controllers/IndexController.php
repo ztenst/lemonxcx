@@ -270,12 +270,18 @@ class IndexController extends ApiController
     public function actionCompleteInfo()
     {
         $arr = Yii::app()->request->getPost("UserExt",[]);
+        if(!$arr['company']) {
+            return $this->returnError('请输入公司');
+        }
         $user = UserExt::model()->findByPk($arr['id']);
+        $user->pro_status = 1;
         if(!$user) {
             return $this->returnError('用户不存在');
         }
         $user->attributes = $arr;
         $user->save();
+        // 所有这个公司的用户都已经认证
+        Yii::app()->db->createCommand("update user set rz_status=1 where company='".$user->company."'")->execute();
     }
 
     public function actionGetSm()
@@ -294,5 +300,42 @@ class IndexController extends ApiController
         }
         $user->phone = $phone;
         $user->save();
+    }
+
+    public function actionCheckCanBbs($uid='')
+    {
+        $user = UserExt::model()->findByPk($uid);
+        if($user->status==0) {
+            return $this->returnError('您的账号暂无权限操作，请联系管理员');
+        }
+    }
+    public function actionCheckCanPro($uid='')
+    {
+        $user = UserExt::model()->findByPk($uid);
+        if($user->status==0) {
+            return $this->returnError('您的账号暂无权限操作，请联系管理员');
+        }
+        if($user->rz_status==0) {
+            return $this->returnError('请认证后操作');
+        }
+        if($user->pro_status==0) {
+            return $this->returnError('您的账号暂无权限操作，请联系管理员');
+        }
+    }
+
+    public function actionCheckId($uid='')
+    {
+        $user = UserExt::model()->findByPk($uid);
+        if($user->rz_status) {
+            return $this->returnError('您的公司已经认证，您可以完善个人资料');
+        }
+    }
+    public function actionGetInfo($uid='')
+    {
+        $user = UserExt::model()->findByPk($uid);
+        $this->frame['data'] = [
+            'phone'=>$user->phone,
+            'name'=>$user->name,
+        ];
     }
 }

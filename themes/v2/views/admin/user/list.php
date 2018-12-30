@@ -36,7 +36,9 @@ $this->breadcrumbs = array($this->pageTitle);
         <th class="text-center">公司名</th>
         <th class="text-center">添加时间</th>
         <th class="text-center">修改时间</th>
-        <th class="text-center">状态</th>
+        <th class="text-center">账号状态</th>
+        <th class="text-center">认证状态</th>
+        <th class="text-center">发布商品权限</th>
         <th class="text-center">操作</th>
     </tr>
     </thead>
@@ -53,6 +55,8 @@ $this->breadcrumbs = array($this->pageTitle);
             <td class="text-center"><?=date('Y-m-d H:i:s',$v->created)?></td>
             <td class="text-center"><?=date('Y-m-d H:i:s',$v->updated)?></td>
             <td class="text-center"><?php echo CHtml::ajaxLink(UserExt::$status[$v->status],$this->createUrl('changeStatus'), array('type'=>'get', 'data'=>array('id'=>$v->id,'class'=>get_class($v)),'success'=>'function(data){location.reload()}'), array('class'=>'btn btn-sm '.UserExt::$statusStyle[$v->status])); ?></td>
+            <td class="text-center"><?php echo CHtml::ajaxLink(UserExt::$rz_status[$v->rz_status],$this->createUrl('changeRzStatus'), array('type'=>'get', 'data'=>array('id'=>$v->id,'class'=>get_class($v)),'success'=>'function(data){location.reload()}'), array('class'=>'btn btn-sm '.UserExt::$statusStyle[$v->rz_status])); ?></td>
+            <td class="text-center"><?php echo CHtml::ajaxLink(UserExt::$pro_status[$v->pro_status],$this->createUrl('changeProStatus'), array('type'=>'get', 'data'=>array('id'=>$v->id,'class'=>get_class($v)),'success'=>'function(data){location.reload()}'), array('class'=>'btn btn-sm '.UserExt::$statusStyle[$v->pro_status])); ?></td>
 
             <td style="text-align:center;vertical-align: middle">
                 

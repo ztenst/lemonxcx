@@ -94,4 +94,19 @@ class UserController extends AdminController{
             
         }
     }
+
+    public function actionChangeRzStatus($id='')
+    {
+        $user = UserExt::model()->findByPk($id);
+        $user->rz_status = $user->rz_status==1?0:1;
+        $user->save();
+        $this->setMessage('操作成功');
+    }
+    public function actionChangeProStatus($id='')
+    {
+        $user = UserExt::model()->findByPk($id);
+        $user->pro_status = $user->pro_status==1?0:1;
+        $user->save();
+        $this->setMessage('操作成功');
+    }
 }

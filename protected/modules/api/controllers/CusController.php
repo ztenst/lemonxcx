@@ -73,7 +73,7 @@ class CusController extends ApiController
 					// 'price'=>$value->price,
 					// 'old_price'=>$value->old_price,
 					// 'ts'=>$value->shortdes,
-					'image'=>ImageTools::fixImage($value->image,700,360),
+					'image'=>$value->image?ImageTools::fixImage($value->image,700,360):'',
 				];
 			}
 		}
@@ -226,6 +226,10 @@ class CusController extends ApiController
     		$fm = Yii::app()->request->getPost('fm','');
     		$imgs = Yii::app()->request->getPost('imgs','');
             $cid = Yii::app()->request->getPost('cid','');
+            $user = UserExt::model()->findByPk($uid);
+            if($user->status==0) {
+                return $this->returnError('您的账号暂无权限操作，请联系管理员');
+            }
     		if(!$uid || !$title || !$content) {
     			return $this->returnError('参数错误');
     		}
@@ -264,7 +268,7 @@ class CusController extends ApiController
     		} else {
     			return $this->returnError(current(current($obj->getErrors())));
     		}
-
+            $this->returnSuccess('发布帖子成功');
 
     	}
     }
@@ -320,6 +324,10 @@ class CusController extends ApiController
     public function actionAddComment()
     {
         $values = Yii::app()->request->getPost('CommentExt',[]);
+        $user = UserExt::model()->findByPk($values['uid']);
+        if($user->status==0) {
+            return $this->returnError('您的账号暂无权限操作，请联系管理员');
+        }
         $obj = new CommentExt;
         if($obj->getIsNewRecord()&&CommentExt::model()->find("content='".$obj->content."'")) {
                 return $this->returnError('该评论已存在，请勿重复发布');
