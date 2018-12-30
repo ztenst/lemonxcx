@@ -73,6 +73,15 @@ class UserExt extends User{
             $this->created = $this->updated = time();
         }
         else {
+
+            if($this->rz_status==1 && Yii::app()->db->createCommand("select rz_status from user where id=".$this->id)->queryScalar()==0) {
+            Yii::app()->db->createCommand("update user set rz_status=1 where company='".$this->company."'")->execute();
+
+            }
+            if($this->rz_status==0 && Yii::app()->db->createCommand("select rz_status from user where id=".$this->id)->queryScalar()==1) {
+            Yii::app()->db->createCommand("update user set rz_status=0 where company='".$this->company."'")->execute();
+
+            }
             $this->updated = time();
         }
             

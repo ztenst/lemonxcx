@@ -11,6 +11,8 @@
  * @property string $desc
  * @property integer $parent
  * @property integer $sort
+ * @property string $max
+ * @property string $min
  * @property integer $status
  * @property integer $created
  * @property integer $updated
@@ -36,9 +38,10 @@ class Tag extends CActiveRecord
 			array('created', 'required'),
 			array('parent, sort, status, created, updated', 'numerical', 'integerOnly'=>true),
 			array('name, icon, cate, desc', 'length', 'max'=>255),
+			array('max, min', 'length', 'max'=>100),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, name, icon, cate, desc, parent, sort, status, created, updated', 'safe', 'on'=>'search'),
+			array('id, name, icon, cate, desc, parent, sort, max, min, status, created, updated', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -66,6 +69,8 @@ class Tag extends CActiveRecord
 			'desc' => 'Desc',
 			'parent' => 'Parent',
 			'sort' => 'Sort',
+			'max' => 'Max',
+			'min' => 'Min',
 			'status' => 'Status',
 			'created' => 'Created',
 			'updated' => 'Updated',
@@ -97,6 +102,8 @@ class Tag extends CActiveRecord
 		$criteria->compare('desc',$this->desc,true);
 		$criteria->compare('parent',$this->parent);
 		$criteria->compare('sort',$this->sort);
+		$criteria->compare('max',$this->max,true);
+		$criteria->compare('min',$this->min,true);
 		$criteria->compare('status',$this->status);
 		$criteria->compare('created',$this->created);
 		$criteria->compare('updated',$this->updated);

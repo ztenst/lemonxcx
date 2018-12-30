@@ -281,7 +281,6 @@ class IndexController extends ApiController
         $user->attributes = $arr;
         $user->save();
         // 所有这个公司的用户都已经认证
-        Yii::app()->db->createCommand("update user set rz_status=1 where company='".$user->company."'")->execute();
     }
 
     public function actionGetSm()
