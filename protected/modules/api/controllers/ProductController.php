@@ -147,9 +147,11 @@ class ProductController extends ApiController
 		$data['tags'] = [];
 		$data['tags'][] = ['name'=>'商家','value'=>$info->company];
 		if($info->area || $info->street) {
+			$area = AreaExt::model()->findByPk($info->area);
+			$street = AreaExt::model()->findByPk($info->street);
 			$cd = '';
-			$info->area && $cd .= AreaExt::model()->findByPk($info->area)->name;
-			$info->street && $cd .= AreaExt::model()->findByPk($info->street)->name;
+			$area && $cd .= $area->name;
+			$street && $cd .= $street->name;
 			$data['tags'][] = ['name'=>'产地','value'=>$cd];
 		}
 		if(isset(ProductExt::$types[$info->type])) {
