@@ -249,6 +249,7 @@ class ProductController extends ApiController
 
     public function actionAddSave($pid='',$uid='',$type='')
     {
+    	$type = 1;
         if($pid&&$uid) {
             $staff = UserExt::model()->findByPk($uid);
             if($save = SaveExt::model()->find('pid='.(int)$pid.' and type='.$type.' and uid='.$staff->id)) {

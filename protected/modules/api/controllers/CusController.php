@@ -169,9 +169,11 @@ class CusController extends ApiController
 	public function actionAddSave($pid='',$uid='',$type=1)
     {
         if($pid&&$uid) {
+            $pp = ArticleExt::model()->findByPk($pid);
+            $type = $pp->type==1?2:3;
             $staff = UserExt::model()->findByPk($uid);
-            if($save = SaveExt::model()->find('pid='.(int)$pid.' and type=2 and uid='.$staff->id)) {
-                SaveExt::model()->deleteAllByAttributes(['pid'=>$pid,'uid'=>$staff->id,'type'=>2]);
+            if($save = SaveExt::model()->find('pid='.(int)$pid.' and type=$type and uid='.$staff->id)) {
+                SaveExt::model()->deleteAllByAttributes(['pid'=>$pid,'uid'=>$staff->id,'type'=>$type]);
                 $this->frame['data'] = 0;
                 $this->returnSuccess('取消收藏成功');
             } else {
