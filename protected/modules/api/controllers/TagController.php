@@ -134,7 +134,7 @@ class TagController extends ApiController{
 		            $areas[0]['childArea'] = $areas[0]->childArea;
 		            return $this->addChild($areas);
 		            });
-    	$tags = CacheExt::gas('wap_all_tags','AreaExt',0,'waptags',function (){
+    	$alltags = CacheExt::gas('wap_all_tags','AreaExt',0,'waptags',function (){
     				$tags = [];
 		            $areas = TagExt::model()->findAll(['condition'=>'status=1','order'=>'sort asc']);
 		            foreach ($areas as $key => $value) {
@@ -172,13 +172,13 @@ class TagController extends ApiController{
 	    					$origin[] = [
 			    				'name'=>$tag_names['range'][$o],
 			    				'filed'=>'pricetag',
-			    				'list'=>isset($tags[$o])?$tags[$o]:[],
+			    				'list'=>isset($alltags[$o])?$alltags[$o]:[],
 			    			];
 	    				} else {
 	    					$origin[] = [
 			    				'name'=>$tag_names['direct'][$o],
 			    				'filed'=>$antitags[$o],
-			    				'list'=>isset($tags[$o])?$tags[$o]:[],
+			    				'list'=>isset($alltags[$o])?$alltags[$o]:[],
 			    			];
 	    				}
 	    			}
@@ -209,7 +209,7 @@ class TagController extends ApiController{
 	    				$more[] = [
 	    					'name'=>$tag_names['direct'][$o],
 			    				'filed'=>$antitags[$o],
-			    				'list'=>isset($tags[$o])?$tags[$o]:[],
+			    				'list'=>isset($alltags[$o])?$alltags[$o]:[],
 	    				];
 	    			}
 	    			
