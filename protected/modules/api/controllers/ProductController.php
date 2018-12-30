@@ -261,13 +261,13 @@ class ProductController extends ApiController
                 $save->pid = $pid;
                 $save->type = $type;
                 $save->save();
-                if($type==1) {
+                // if($type==1) {
                 	$obj = new LogExt;
 					$obj->pid = $pid;
 					$obj->uid = $uid;
 					$obj->type = 3;
 					$obj->save();
-                }
+                // }
 	                
                 $this->frame['data'] = 1;
                 $this->returnSuccess('收藏成功');
