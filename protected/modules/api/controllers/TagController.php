@@ -138,7 +138,7 @@ class TagController extends ApiController{
     				$tags = [];
 		            $areas = TagExt::model()->findAll(['condition'=>'status=1','order'=>'sort asc']);
 		            foreach ($areas as $key => $value) {
-		            	$tags[$value['cate']] = ['id'=>$value['id'],'name'=>$value['name']];
+		            	$tags[$value['cate']][] = ['id'=>$value['id'],'name'=>$value['name']];
 		            }
 		            // $areas[0]['childArea'] = $areas[0]->childArea;
 		            return $tags;
