@@ -403,6 +403,12 @@ class ProductController extends ApiController
     	if($user->status==0) {
             return $this->returnError('您的账号暂无权限操作，请联系管理员');
         }
+        if($user->rz_status==0) {
+            return $this->returnError('您的账号暂无权限操作，请联系管理员');
+        }
+        if($user->pro_status==0) {
+            return $this->returnError('您的账号暂无权限操作，请联系管理员');
+        }
     	$imgs = isset($arrs['images'])?$arrs['images']:[];
     	unset($arrs['images']);
     	if(isset($arrs['id'])&&$arrs['id']) {
