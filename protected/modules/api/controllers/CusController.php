@@ -296,9 +296,9 @@ class CusController extends ApiController
     public function actionLogList($uid='',$type='',$utype=1)
     {
         if($utype==1) {
-            $logs = LogExt::model()->findAll(['condition'=>"puid=$uid",'order'=>'updated desc','limit'=>50]);
+            $logs = LogExt::model()->findAll(['condition'=>"puid=$uid and type=$type",'order'=>'updated desc','limit'=>50]);
         } else {
-            $logs = LogExt::model()->findAll(['condition'=>"uid=$uid",'order'=>'updated desc','limit'=>50]);
+            $logs = LogExt::model()->findAll(['condition'=>"uid=$uid and type=$type",'order'=>'updated desc','limit'=>50]);
         }
         $data = [];
         if($logs) {
