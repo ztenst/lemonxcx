@@ -23,8 +23,19 @@ class IndexController extends ApiController
         $indexIds = SiteExt::getAttr('qjpz','topIdArr');
         if($banner) {
             foreach ($banner as $key => $value) {
+                $tto = '';
                 $data['imgs'][] = Yii::app()->file->is_heng?ImageTools::fixImage($value,750,376):ImageTools::fixImage($value,750,826);
-                $data['indexIds'][] = isset($indexIds[$key])?$indexIds[$key]:0;
+                $data['indexIds'][] = isset($indexIds[$key])?$indexIds[$key]:"";
+                if(isset($indexIds[$key])) {
+                    if(strstr($indexIds[$key],'p') || is_numeric($indexIds[$key])) {
+                        $tto = 'p';
+                    }elseif (strstr($indexIds[$key],'n')) {
+                        $tto = 'n';
+                    }elseif (strstr($indexIds[$key],'t')) {
+                       $tto = 't';
+                    }
+                }
+                $data['indexTypes'][] = $tto;
             }
         }
         // 分类图

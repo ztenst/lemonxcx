@@ -37,7 +37,7 @@ $this->breadcrumbs = array('站点配置', $this->pageTitle);
                     <?php $this->widget('FileUpload',array('inputName'=>'img','multi'=>true,'callback'=>'function(data){callback(data);}')); ?>
                     <div class="form-group images-place" style="margin-left: 220px">
                   <?php if($model->indeximages) foreach ($model->indeximages as $key => $v) {?>
-                      <div class='image-div' style='width: 150px;display:inline-table;height:180px'><a onclick='del_img(this)' class='btn red btn-xs' style='position: absolute;'><i class='fa fa-trash'></i></a><img src='<?=ImageTools::fixImage($v)?>' style='width: 150px;height: 120px'><input type='hidden' class='trans_img' name='SiteExt[indeximages][]' value='<?=$v?>'></input> <span>关联楼盘id</span> <input type="text" style="width: 150px" placeholder="请输入关联楼盘id" name="SiteExt[topIdArr][]" value="<?=isset($arr[$key])?($arr[$key]):'0'?>"></div>
+                      <div class='image-div' style='width: 150px;display:inline-table;height:180px'><a onclick='del_img(this)' class='btn red btn-xs' style='position: absolute;'><i class='fa fa-trash'></i></a><img src='<?=ImageTools::fixImage($v)?>' style='width: 150px;height: 120px'><input type='hidden' class='trans_img' name='SiteExt[indeximages][]' value='<?=$v?>'></input> <span>关联楼盘id</span> <input type="text" style="width: 150px" placeholder="帖子t新闻n产品p开头" name="SiteExt[topIdArr][]" value="<?=isset($arr[$key])?($arr[$key]):'0'?>"></div>
                   <?php }?>
                 </div>
         <?php elseif($value['type'] == 'text'):?>
