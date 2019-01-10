@@ -92,7 +92,7 @@ class ProductController extends ApiController
 					'status'=>$value->status,
 					'status_word'=>ProductExt::$status[$value->status],
 					'company'=>$value->company,
-					'price'=>$value->price,
+					'price'=>$value->price?$value->price:'价格电询',
 					'hits'=>$value->hits,
 					'ts'=>Tools::u8_title_substr($value->shortdes,30),
 					'image'=>ImageTools::fixImage($value->image,370,250),
@@ -144,6 +144,7 @@ class ProductController extends ApiController
 				$data['is_save'] = SaveExt::model()->count("pid=$id and uid=$uid")?1:0;
 			// }
 		}
+		!$data['price'] && $data['price'] = '价格电询';
 		$data['tags'] = [];
 		$data['tags'][] = ['name'=>'商家','value'=>$info->company];
 		if($info->area || $info->street) {
