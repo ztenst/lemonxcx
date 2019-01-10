@@ -54,7 +54,7 @@ class SiteExt extends Site{
             'productnotice'=>['type'=>'text','name'=>'产品备注'],
             'sitecolor'=>['type'=>'text','name'=>'站点颜色'],
             'sitename'=>['type'=>'text','name'=>'站点名'],
-            'shengming'=>['type'=>'text','name'=>'声明'],
+            'shengming'=>['type'=>'textarea','name'=>'声明'],
                         ],
         'sen'=>[
             'sen'=>['type'=>'text','name'=>'敏感词'],

@@ -43,7 +43,7 @@ $this->breadcrumbs = array('站点配置', $this->pageTitle);
         <?php elseif($value['type'] == 'text'):?>
             <?php echo $form->textField($model, $key, array('class' => 'form-control fi','onfocus'=>'setFocus(this)')); ?>
         <?php elseif($value['type'] == 'textarea'):?>
-            <?php echo $form->textarea($model, $key, array('class' => 'form-control fi','onfocus'=>'setFocus(this)')); ?>
+            <?php echo $form->textarea($model, $key, array('id'=>'UserExt_content','onfocus'=>'setFocus(this)')); ?>
 
         <?php endif;?>
         </div>
