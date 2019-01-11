@@ -37,8 +37,11 @@ class ProductController extends ApiController
 		}
 		if($pricetag) {
 			$pricetagobj = TagExt::model()->findByPk($pricetag);
-			$criteria->addCondition("price>=".$pricetag->min);
-			$criteria->addCondition("price<=".$pricetag->max);
+			if($pricetagobj) {
+				$criteria->addCondition("price>=".$pricetagobj->min);
+				$criteria->addCondition("price<=".$pricetagobj->max);
+			}
+				
 		}
 		
 		$criteria->limit = $limit;
