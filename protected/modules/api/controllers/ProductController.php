@@ -20,6 +20,7 @@ class ProductController extends ApiController
 		$page = (int)Yii::app()->request->getQuery('page',1);
 		$limit = (int)Yii::app()->request->getQuery('limit',20);
 		$status = Yii::app()->request->getQuery('status',1);
+		$pricetag = Yii::app()->request->getQuery('pricetag','');
 		$sort = Yii::app()->request->getQuery('sort',0);
 		$kw = $this->cleanXss(Yii::app()->request->getQuery('kw',''));
 		!$page && $page = 1;
@@ -33,6 +34,11 @@ class ProductController extends ApiController
 			$criteria->order = 'price desc,sort desc,updated desc';
 		} elseif ($sort==3) {
 			$criteria->order = 'created desc,sort desc,updated desc';
+		}
+		if($pricetag) {
+			$pricetagobj = TagExt::model()->findByPk($pricetag);
+			$criteria->addCondition("price>=".$pricetag->min);
+			$criteria->addCondition("price<=".$pricetag->max);
 		}
 		
 		$criteria->limit = $limit;
