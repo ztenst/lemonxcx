@@ -16,118 +16,122 @@ class IndexController extends ApiController
 
     public function actionIndex()
     {
-        $data = $data['imgs'] = $data['cates'] = $data['short_recoms'] = $data['long_recoms'] = [];
-        // 轮播图
-        $banner = SiteExt::getAttr('qjpz','indeximages');
-        $rzwords = SiteExt::getAttr('qjpz','rzwords');
-        $indexIds = SiteExt::getAttr('qjpz','topIdArr');
-        if($banner) {
-            foreach ($banner as $key => $value) {
-                $tto = '';
-                $data['imgs'][] = Yii::app()->file->is_heng?ImageTools::fixImage($value,750,376):ImageTools::fixImage($value,750,826);
-                $data['indexIds'][] = isset($indexIds[$key])?$indexIds[$key]:"";
-                if(isset($indexIds[$key])) {
-                    if(strstr($indexIds[$key],'p') || is_numeric($indexIds[$key])) {
-                        $tto = 'p';
-                    }elseif (strstr($indexIds[$key],'n')) {
-                        $tto = 'n';
-                    }elseif (strstr($indexIds[$key],'t')) {
-                       $tto = 't';
+        $data = CacheExt::gas('wap_index','AreaExt',0,'首页',function (){
+                    $data = $data['imgs'] = $data['cates'] = $data['short_recoms'] = $data['long_recoms'] = [];
+                    // 轮播图
+                    $banner = SiteExt::getAttr('qjpz','indeximages');
+                    $rzwords = SiteExt::getAttr('qjpz','rzwords');
+                    $indexIds = SiteExt::getAttr('qjpz','topIdArr');
+                    if($banner) {
+                        foreach ($banner as $key => $value) {
+                            $tto = '';
+                            $data['imgs'][] = Yii::app()->file->is_heng?ImageTools::fixImage($value,750,376):ImageTools::fixImage($value,750,826);
+                            $data['indexIds'][] = isset($indexIds[$key])?$indexIds[$key]:"";
+                            if(isset($indexIds[$key])) {
+                                if(strstr($indexIds[$key],'p') || is_numeric($indexIds[$key])) {
+                                    $tto = 'p';
+                                }elseif (strstr($indexIds[$key],'n')) {
+                                    $tto = 'n';
+                                }elseif (strstr($indexIds[$key],'t')) {
+                                   $tto = 't';
+                                }
+                            }
+                            $data['indexTypes'][] = $tto;
+                        }
                     }
-                }
-                $data['indexTypes'][] = $tto;
-            }
-        }
-        // 分类图
-        $tags = TagExt::model()->findAll(['condition'=>"cate='tab'",'order'=>'sort asc']);
-        if($tags) {
-            $aat = ProductExt::$types;
-            $aats = [];
-            foreach ($aat as $key => $value) {
-                $aats[$value['name']] = $key;
-            }
-            foreach ($tags as $key => $value) {
+                    // 分类图
+                    $tags = TagExt::model()->findAll(['condition'=>"cate='tab'",'order'=>'sort asc']);
+                    if($tags) {
+                        $aat = ProductExt::$types;
+                        $aats = [];
+                        foreach ($aat as $key => $value) {
+                            $aats[$value['name']] = $key;
+                        }
+                        foreach ($tags as $key => $value) {
 
-                $data['cates'][] = [
-                    'id'=>$value->id,
-                    'py'=>$value->name=='论坛'?'luntan':($value->name=='行业新闻'?'xinwen':$aats[$value->name]),
-                    'name'=>$value->name,
-                    'img'=>ImageTools::fixImage($value->icon,200,200),
-                ];
-            }
-        }
-        // 三个推荐
-        $shs = RecomExt::model()->normal()->findAll(['condition'=>'cid=2','limit'=>2]);
-        if($shs) {
-            foreach ($shs as $key => $value) {
-                $obj = $value->getObj();
-                $data['short_recoms'][] = [
-                    'pid'=>$obj?$obj->id:'',
-                    // 'name'=>$value->name,//750
-                    'img'=>ImageTools::fixImage($value->image,370,260),
-                ];
-            }
-        }
-        // 三个推荐
-        $shs = RecomExt::model()->normal()->findAll(['condition'=>'cid=1','limit'=>1]);
-        if($shs) {
-            foreach ($shs as $key => $value) {
-                $obj = $value->getObj();
-                $data['long_recoms'][] = [
-                    'pid'=>$obj?$obj->id:'',
-                    // 'name'=>$value->name,//750
-                    'img'=>ImageTools::fixImage($value->image),
-                ];
-            }
-        }
-        // 6个产品
-        $shs = RecomExt::model()->normal()->findAll(['condition'=>'cid=3 and deleted=0','limit'=>6]);
-        if($shs) {
-            foreach ($shs as $key => $value) {
-                $obj = $value->getObj();
-                if(!$obj) {
-                    continue;
-                }
-                $data['products'][] = [
-                    'pid'=>$obj?$obj->id:'',
-                    'name'=>$obj->name,
-                    'price'=>$obj->price,
-                    'company'=>$obj->company,
-                    'rzwords'=>$obj->is_rz?$rzwords:'',
-                    // 'name'=>$value->name,//750
-                    'img'=>ImageTools::fixImage($value->image?$value->image:$obj->image),
-                ];
-            }
-        }
-        // 十篇推荐的文章
-        $shs = ArticleExt::model()->findAll(['condition'=>'type=1 and status=1 and deleted=0','limit'=>6,'order'=>'sort desc,updated desc']);
-        if($shs) {
-            foreach ($shs as $key => $value) {
-                // $obj = $value->getObj();
-                $data['news'][] = [
-                    'id'=>$value->id,
-                    'title'=>$value->title,
-                    'author'=>$value->user?$value->user->name:'佚名',
-                    'hits'=>$value->hits,
-                    // 'name'=>$value->name,//750
-                    'img'=>ImageTools::fixImage($value->image),
-                ];
-            }
-        }
-        $shs = ArticleExt::model()->findAll(['condition'=>'type=2 and status=1 and deleted=0','limit'=>6,'order'=>'sort desc,updated desc']);
-        if($shs) {
-            foreach ($shs as $key => $value) {
-                // $obj = $value->getObj();
-                $data['tzs'][] = [
-                    'id'=>$value->id,
-                    'title'=>$value->title,
-                    'author'=>$value->user?$value->user->name:'佚名',
-                    'hits'=>$value->hits,
-                    // 'name'=>$value->name,//750
-                    'img'=>ImageTools::fixImage($value->image),
-                ];
-            }
-        }
+                            $data['cates'][] = [
+                                'id'=>$value->id,
+                                'py'=>$value->name=='论坛'?'luntan':($value->name=='行业新闻'?'xinwen':$aats[$value->name]),
+                                'name'=>$value->name,
+                                'img'=>ImageTools::fixImage($value->icon,200,200),
+                            ];
+                        }
+                    }
+                    // 三个推荐
+                    $shs = RecomExt::model()->normal()->findAll(['condition'=>'cid=2','limit'=>2]);
+                    if($shs) {
+                        foreach ($shs as $key => $value) {
+                            $obj = $value->getObj();
+                            $data['short_recoms'][] = [
+                                'pid'=>$obj?$obj->id:'',
+                                // 'name'=>$value->name,//750
+                                'img'=>ImageTools::fixImage($value->image,370,260),
+                            ];
+                        }
+                    }
+                    // 三个推荐
+                    $shs = RecomExt::model()->normal()->findAll(['condition'=>'cid=1','limit'=>1]);
+                    if($shs) {
+                        foreach ($shs as $key => $value) {
+                            $obj = $value->getObj();
+                            $data['long_recoms'][] = [
+                                'pid'=>$obj?$obj->id:'',
+                                // 'name'=>$value->name,//750
+                                'img'=>ImageTools::fixImage($value->image),
+                            ];
+                        }
+                    }
+                    // 6个产品
+                    $shs = RecomExt::model()->normal()->findAll(['condition'=>'cid=3 and deleted=0','limit'=>6]);
+                    if($shs) {
+                        foreach ($shs as $key => $value) {
+                            $obj = $value->getObj();
+                            if(!$obj) {
+                                continue;
+                            }
+                            $data['products'][] = [
+                                'pid'=>$obj?$obj->id:'',
+                                'name'=>$obj->name,
+                                'price'=>$obj->price,
+                                'company'=>$obj->company,
+                                'rzwords'=>$obj->is_rz?$rzwords:'',
+                                // 'name'=>$value->name,//750
+                                'img'=>ImageTools::fixImage($value->image?$value->image:$obj->image),
+                            ];
+                        }
+                    }
+                    // 十篇推荐的文章
+                    $shs = ArticleExt::model()->findAll(['condition'=>'type=1 and status=1 and deleted=0','limit'=>6,'order'=>'sort desc,updated desc']);
+                    if($shs) {
+                        foreach ($shs as $key => $value) {
+                            // $obj = $value->getObj();
+                            $data['news'][] = [
+                                'id'=>$value->id,
+                                'title'=>$value->title,
+                                'author'=>$value->user?$value->user->name:'佚名',
+                                'hits'=>$value->hits,
+                                // 'name'=>$value->name,//750
+                                'img'=>ImageTools::fixImage($value->image),
+                            ];
+                        }
+                    }
+                    $shs = ArticleExt::model()->findAll(['condition'=>'type=2 and status=1 and deleted=0','limit'=>6,'order'=>'sort desc,updated desc']);
+                    if($shs) {
+                        foreach ($shs as $key => $value) {
+                            // $obj = $value->getObj();
+                            $data['tzs'][] = [
+                                'id'=>$value->id,
+                                'title'=>$value->title,
+                                'author'=>$value->user?$value->user->name:'佚名',
+                                'hits'=>$value->hits,
+                                // 'name'=>$value->name,//750
+                                'img'=>ImageTools::fixImage($value->image),
+                            ];
+                        }
+                    }
+                    return $data;
+                    });
+                    
         $this->frame['data'] = $data;
     }
 
