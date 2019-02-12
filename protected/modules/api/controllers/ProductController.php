@@ -20,6 +20,7 @@ class ProductController extends ApiController
 		$page = (int)Yii::app()->request->getQuery('page',1);
 		$limit = (int)Yii::app()->request->getQuery('limit',20);
 		$status = Yii::app()->request->getQuery('status',1);
+		$pricetag = Yii::app()->request->getQuery('pricetag','');
 		$sort = Yii::app()->request->getQuery('sort',0);
 		$kw = $this->cleanXss(Yii::app()->request->getQuery('kw',''));
 		!$page && $page = 1;
@@ -33,6 +34,14 @@ class ProductController extends ApiController
 			$criteria->order = 'price desc,sort desc,updated desc';
 		} elseif ($sort==3) {
 			$criteria->order = 'created desc,sort desc,updated desc';
+		}
+		if($pricetag) {
+			$pricetagobj = TagExt::model()->findByPk($pricetag);
+			if($pricetagobj) {
+				$criteria->addCondition("price>=".$pricetagobj->min);
+				$criteria->addCondition("price<=".$pricetagobj->max);
+			}
+				
 		}
 		
 		$criteria->limit = $limit;
@@ -92,7 +101,7 @@ class ProductController extends ApiController
 					'status'=>$value->status,
 					'status_word'=>ProductExt::$status[$value->status],
 					'company'=>$value->company,
-					'price'=>$value->price,
+					'price'=>$value->price>0?$value->price:'价格电询',
 					'hits'=>$value->hits,
 					'ts'=>Tools::u8_title_substr($value->shortdes,30),
 					'image'=>ImageTools::fixImage($value->image,370,250),
@@ -144,6 +153,7 @@ class ProductController extends ApiController
 				$data['is_save'] = SaveExt::model()->count("pid=$id and uid=$uid")?1:0;
 			// }
 		}
+		$data['price']<=0 && $data['price'] = '价格电询';
 		$data['tags'] = [];
 		$data['tags'][] = ['name'=>'商家','value'=>$info->company];
 		if($info->area || $info->street) {
