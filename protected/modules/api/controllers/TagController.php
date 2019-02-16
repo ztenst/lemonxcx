@@ -129,12 +129,13 @@ class TagController extends ApiController{
     public function actionActiveTags()
     {
     	$data = [];
-    	// $areas = CacheExt::gas('wap_all_area','AreaExt',0,'wap区域缓存',function (){
-		   //          $areas = AreaExt::model()->normal()->findAll(['select'=>'id,name,parent','condition'=>'parent=0','order'=>'sort asc']);
-		   //          $areas[0]['childArea'] = $areas[0]->childArea;
-		   //          return $this->addChild($areas);
-		   //          });
-    	$areas = [];
+    	$areas = CacheExt::gas('wap_all_area','AreaExt',0,'wap区域缓存',function (){
+		            $areas = AreaExt::model()->normal()->findAll(['select'=>'id,name,parent','condition'=>'parent=0','order'=>'sort asc']);
+		            $areas[0]['childArea'] = $areas[0]->childArea;
+		            return $this->addChild($areas);
+		            });
+    	// $this->frame['data'] = $areas;
+    	// exit;
     	$alltags = CacheExt::gas('wap_all_tags','AreaExt',0,'waptags',function (){
     				$tags = [];
 		            $areas = TagExt::model()->findAll(['condition'=>'status=1','order'=>'sort asc']);
